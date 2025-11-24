@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarShare - Guest Registration</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="logo">
+                <i class="fas fa-car"></i>
+                <span>CarShare</span>
+            </div>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container" id="app-container">
+
+        <!-- Screen 1: Welcome/Onboarding -->
+        <div class="screen active" id="welcome-screen">
+            <div class="screen-content">
+                <div class="hero-section">
+                    <div class="logo">
+                        <i class="fas fa-car"></i>
+                        <span>CarShare</span>
+                    </div>
+                    <div class="hero-image">
+                        <div class="car-illustration">
+                            <i class="fas fa-car"></i>
+                        </div>
+                    </div>
+                    <h1>Your car when you need it</h1>
+                    <p>Join thousands who choose CarShare for convenient, reliable transportation</p>
+                </div>
+                <div class="bottom-section">
+                    <button class="btn-primary" onclick="nextScreen('account-type-screen')">
+                        Get Started
+                    </button>
+                    <button class="btn-text" onclick="showLogin()">
+                        Already have account? Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 2: Account Type Selection -->
+        <div class="screen" id="account-type-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('welcome-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>How do you want to use CarShare?</h2>
+                </div>
+                <div class="account-type-cards">
+                    <div class="account-card" onclick="selectAccountType('guest')">
+                        <div class="card-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <h3>Rent Cars</h3>
+                        <ul>
+                            <li>Book instantly</li>
+                            <li>Choose from nearby cars</li>
+                            <li>Flexible timing</li>
+                        </ul>
+                        <div class="card-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    <div class="account-card" onclick="selectAccountType('host')">
+                        <div class="card-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <h3>Share My Car</h3>
+                        <ul>
+                            <li>Earn money monthly</li>
+                            <li>Insurance included</li>
+                            <li>You control availability</li>
+                        </ul>
+                        <div class="card-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 3: Basic Information -->
+        <div class="screen" id="basic-info-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('account-type-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 25%"></div>
+                        </div>
+                        <span>Step 1 of 4</span>
+                    </div>
+                </div>
+                <h2>Let's get to know you</h2>
+                <form id="basic-info-form" class="form">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                        <div class="error-message" id="firstName-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                        <div class="error-message" id="lastName-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                        <div class="error-message" id="email-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <div class="phone-input">
+                            <select id="countryCode" name="countryCode">
+                                <option value="+1">🇺🇸 +1</option>
+                                <option value="+52">🇲🇽 +52</option>
+                                <option value="+44">🇬🇧 +44</option>
+                            </select>
+                            <input type="tel" id="phone" name="phone" placeholder="555-123-4567" required>
+                        </div>
+                        <div class="error-message" id="phone-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="password" name="password" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword()">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="password-strength">
+                            <div class="strength-bar">
+                                <div class="strength-fill"></div>
+                            </div>
+                            <span class="strength-text">Password strength</span>
+                        </div>
+                        <div class="error-message" id="password-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                        <div class="error-message" id="confirmPassword-error"></div>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <span class="checkmark"></span>
+                            I agree to the <a href="#" class="link">Terms of Service</a> and <a href="#" class="link">Privacy Policy</a>
+                        </label>
+                        <div class="error-message" id="terms-error"></div>
+                    </div>
+                    <button type="submit" class="btn-primary" id="continue-btn">
+                        Continue
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Screen 4: Phone Verification -->
+        <div class="screen" id="phone-verification-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('basic-info-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 50%"></div>
+                        </div>
+                        <span>Step 2 of 4</span>
+                    </div>
+                </div>
+                <div class="verification-content">
+                    <div class="verification-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h2>Verify your phone</h2>
+                    <p>We sent a 6-digit code to <span id="phone-display"></span></p>
+
+                    <div class="pin-input-container">
+                        <input type="text" class="pin-input" maxlength="1" data-index="0">
+                        <input type="text" class="pin-input" maxlength="1" data-index="1">
+                        <input type="text" class="pin-input" maxlength="1" data-index="2">
+                        <input type="text" class="pin-input" maxlength="1" data-index="3">
+                        <input type="text" class="pin-input" maxlength="1" data-index="4">
+                        <input type="text" class="pin-input" maxlength="1" data-index="5">
+                    </div>
+
+                    <div class="verification-actions">
+                        <div class="resend-section">
+                            <span>Didn't receive the code?</span>
+                            <button class="btn-text" id="resend-btn" onclick="resendCode()" disabled>
+                                Resend in <span id="countdown">60</span>s
+                            </button>
+                        </div>
+                        <button class="btn-primary" id="verify-btn" onclick="verifyPhone()" disabled>
+                            Verify
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 5: Driver's License Upload -->
+        <div class="screen" id="license-upload-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('phone-verification-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                        <span>Step 3 of 4</span>
+                    </div>
+                </div>
+                <h2>Upload your driver's license</h2>
+                <p>This helps us verify your identity and driving eligibility</p>
+
+                <div class="upload-container">
+                    <div class="requirements-checklist">
+                        <h3>Requirements:</h3>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Valid and not expired</li>
+                            <li><i class="fas fa-check"></i> All text clearly visible</li>
+                            <li><i class="fas fa-check"></i> No glare or shadows</li>
+                            <li><i class="fas fa-check"></i> Photo shows full license</li>
+                        </ul>
+                    </div>
+
+                    <div class="camera-container" id="camera-container">
+                        <div class="camera-overlay">
+                            <div class="license-frame">
+                                <i class="fas fa-id-card"></i>
+                                <p>Position your license here</p>
+                            </div>
+                        </div>
+                        <button class="btn-camera" onclick="capturePhoto()">
+                            <i class="fas fa-camera"></i>
+                            Take Photo
+                        </button>
+                        <button class="btn-text" onclick="uploadFromGallery()">
+                            Upload from Gallery
+                        </button>
+                    </div>
+
+                    <div class="photo-preview" id="photo-preview" style="display: none;">
+                        <img id="license-image" alt="License photo">
+                        <div class="preview-actions">
+                            <button class="btn-secondary" onclick="retakePhoto()">
+                                Retake Photo
+                            </button>
+                            <button class="btn-primary" onclick="processLicense()">
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- OCR Processing -->
+                    <div class="ocr-processing" id="ocr-processing" style="display: none;">
+                        <div class="processing-animation">
+                            <div class="spinner"></div>
+                            <p>Processing your license...</p>
+                        </div>
+                    </div>
+
+                    <!-- OCR Results -->
+                    <div class="ocr-results" id="ocr-results" style="display: none;">
+                        <h3>Extracted Information</h3>
+                        <div class="extracted-data">
+                            <div class="data-field">
+                                <label>License Number</label>
+                                <input type="text" id="license-number" readonly>
+                            </div>
+                            <div class="data-field">
+                                <label>Full Name</label>
+                                <input type="text" id="license-name" readonly>
+                            </div>
+                            <div class="data-field">
+                                <label>Date of Birth</label>
+                                <input type="text" id="license-dob" readonly>
+                            </div>
+                            <div class="data-field">
+                                <label>Expiration Date</label>
+                                <input type="text" id="license-exp" readonly>
+                            </div>
+                        </div>
+                        <p class="verification-note">
+                            <i class="fas fa-info-circle"></i>
+                            Please verify this information is correct
+                        </p>
+                        <div class="ocr-actions">
+                            <button class="btn-secondary" onclick="editManually()">
+                                Edit Manually
+                            </button>
+                            <button class="btn-primary" onclick="confirmLicense()">
+                                Looks Good
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-text" onclick="skipForNow()">
+                    Skip for now (limited functionality)
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 6: Payment Method Setup -->
+        <div class="screen" id="payment-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('license-upload-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                        <span>Step 4 of 4</span>
+                    </div>
+                </div>
+                <h2>Add payment method</h2>
+                <div class="security-badges">
+                    <div class="badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>SSL Encrypted</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-lock"></i>
+                        <span>PCI Compliant</span>
+                    </div>
+                </div>
+
+                <form id="payment-form" class="form">
+                    <div class="payment-methods">
+                        <div class="payment-option" onclick="selectPaymentMethod('card')">
+                            <input type="radio" name="paymentMethod" value="card" checked>
+                            <i class="fas fa-credit-card"></i>
+                            <span>Credit/Debit Card</span>
+                        </div>
+                        <div class="payment-option" onclick="selectPaymentMethod('apple')">
+                            <input type="radio" name="paymentMethod" value="apple">
+                            <i class="fab fa-apple"></i>
+                            <span>Apple Pay</span>
+                        </div>
+                        <div class="payment-option" onclick="selectPaymentMethod('google')">
+                            <input type="radio" name="paymentMethod" value="google">
+                            <i class="fab fa-google"></i>
+                            <span>Google Pay</span>
+                        </div>
+                    </div>
+
+                    <div class="card-form" id="card-form">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <div class="card-input">
+                                <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                                <div class="card-brand" id="card-brand"></div>
+                            </div>
+                            <div class="error-message" id="cardNumber-error"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiry">Expiry Date</label>
+                                <input type="text" id="expiry" name="expiry" placeholder="MM/YY" maxlength="5" required>
+                                <div class="error-message" id="expiry-error"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" required>
+                                <div class="error-message" id="cvv-error"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardName">Cardholder Name</label>
+                            <input type="text" id="cardName" name="cardName" required>
+                            <div class="error-message" id="cardName-error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="zipCode">Billing ZIP Code</label>
+                            <input type="text" id="zipCode" name="zipCode" maxlength="10" required>
+                            <div class="error-message" id="zipCode-error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="saveCard" name="saveCard" checked>
+                            <span class="checkmark"></span>
+                            Save for future use
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="complete-setup-btn">
+                        Complete Setup
+                    </button>
+                    <button type="button" class="btn-text" onclick="skipPayment()">
+                        Skip (add payment method later)
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Screen 7: Registration Success -->
+        <div class="screen" id="success-screen">
+            <div class="screen-content">
+                <div class="success-animation">
+                    <div class="checkmark-circle">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                <h1>Welcome to CarShare!</h1>
+                <p>Your account has been successfully created. You're ready to start exploring cars in your area.</p>
+
+                <div class="setup-summary">
+                    <h3>What's Next:</h3>
+                    <ul class="next-steps">
+                        <li>
+                            <i class="fas fa-user-check"></i>
+                            <span>Complete your profile</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Verify your documents</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-car"></i>
+                            <span>Start using CarShare</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="success-actions">
+                    <button class="btn-primary" onclick="completeRegistration()">
+                        Continue to App
+                    </button>
+                    <button class="btn-secondary" onclick="completeProfile()">
+                        Complete Profile Later
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Login Modal -->
+        <div class="modal" id="login-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Welcome Back</h2>
+                    <button class="btn-close" onclick="closeLogin()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form class="form">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" name="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="loginPassword" name="loginPassword" required>
+                            <button type="button" class="password-toggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary">Sign In</button>
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                    <button type="button" class="btn-social google">
+                        <i class="fab fa-google"></i>
+                        Continue with Google
+                    </button>
+                    <button type="button" class="btn-social apple">
+                        <i class="fab fa-apple"></i>
+                        Continue with Apple
+                    </button>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Biometric Authentication Modal -->
+        <div class="modal" id="biometric-modal">
+            <div class="modal-content biometric-content">
+                <div class="biometric-icon">
+                    <i class="fas fa-fingerprint"></i>
+                </div>
+                <h2>Use Touch ID</h2>
+                <p>Sign in to CarShare</p>
+                <div class="biometric-actions">
+                    <button class="btn-text" onclick="closeBiometric()">Cancel</button>
+                    <button class="btn-text" onclick="usePassword()">Use Password</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

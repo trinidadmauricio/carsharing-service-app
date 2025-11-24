@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarShare - Host Onboarding</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="logo">
+                <i class="fas fa-car"></i>
+                <span>CarShare</span>
+            </div>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container" id="app-container">
+
+        <!-- Screen 1: Welcome & Value Proposition -->
+        <div class="screen active" id="welcome-screen">
+            <div class="screen-content">
+                <div class="hero-section">
+                    <div class="logo">
+                        <i class="fas fa-car"></i>
+                        <span>CarShare</span>
+                    </div>
+                    <div class="hero-image">
+                        <div class="host-illustration">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <h1>Turn your car into income</h1>
+                    <p>Join 500+ hosts earning average $400/month in San Jose</p>
+
+                    <div class="earnings-preview">
+                        <div class="earnings-card">
+                            <div class="earnings-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="earnings-info">
+                                <h3>Average Monthly Earnings</h3>
+                                <p class="amount">$400 - $650</p>
+                                <p class="details">Based on 15-20 days availability</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-section">
+                    <button class="btn-primary" onclick="nextScreen('vehicle-info-screen')">
+                        Start Hosting
+                    </button>
+                    <button class="btn-text" onclick="showHowItWorks()">
+                        How it works
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 2: Vehicle Pre-qualification -->
+        <div class="screen" id="vehicle-info-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('welcome-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 16%"></div>
+                        </div>
+                        <span>Step 1 of 6</span>
+                    </div>
+                </div>
+                <h2>Tell us about your car</h2>
+                <p>Let's check if your vehicle qualifies for hosting</p>
+
+                <form id="vehicle-info-form" class="form">
+                    <div class="form-group">
+                        <label for="vehicleYear">Year</label>
+                        <select id="vehicleYear" name="vehicleYear" required>
+                            <option value="">Select year</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2015">2015</option>
+                            <option value="2014">2014</option>
+                            <option value="2013">2013</option>
+                            <option value="2012">2012</option>
+                            <option value="2011">2011</option>
+                            <option value="2010">2010</option>
+                        </select>
+                        <div class="error-message" id="vehicleYear-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicleMake">Make</label>
+                        <select id="vehicleMake" name="vehicleMake" required>
+                            <option value="">Select make</option>
+                            <option value="Toyota">Toyota</option>
+                            <option value="Honda">Honda</option>
+                            <option value="Ford">Ford</option>
+                            <option value="Chevrolet">Chevrolet</option>
+                            <option value="Nissan">Nissan</option>
+                            <option value="BMW">BMW</option>
+                            <option value="Mercedes-Benz">Mercedes-Benz</option>
+                            <option value="Audi">Audi</option>
+                            <option value="Hyundai">Hyundai</option>
+                            <option value="Kia">Kia</option>
+                            <option value="Mazda">Mazda</option>
+                            <option value="Subaru">Subaru</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="error-message" id="vehicleMake-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicleModel">Model</label>
+                        <input type="text" id="vehicleModel" name="vehicleModel" placeholder="e.g., Camry, Civic, Explorer" required>
+                        <div class="error-message" id="vehicleModel-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicleMileage">Current Mileage</label>
+                        <input type="number" id="vehicleMileage" name="vehicleMileage" placeholder="e.g., 45000" required>
+                        <div class="helper-text">Must be under 200,000 miles</div>
+                        <div class="error-message" id="vehicleMileage-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicleLocation">Location (ZIP Code)</label>
+                        <input type="text" id="vehicleLocation" name="vehicleLocation" placeholder="e.g., 95110" required>
+                        <div class="error-message" id="vehicleLocation-error"></div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="check-eligibility-btn">
+                        Check Eligibility
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Screen 3: Identity Verification Introduction -->
+        <div class="screen" id="identity-intro-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('vehicle-info-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 33%"></div>
+                        </div>
+                        <span>Step 2 of 6</span>
+                    </div>
+                </div>
+
+                <div class="verification-content">
+                    <div class="verification-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2>Let's verify your identity</h2>
+                    <p>Quick verification builds trust with guests and keeps our community safe</p>
+
+                    <div class="benefits-list">
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Quick Approval</h4>
+                                <p>Most verifications complete in under 24 hours</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <h4>Build Trust</h4>
+                                <p>Verified hosts get 40% more bookings</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-lock"></i>
+                            <div>
+                                <h4>Secure Platform</h4>
+                                <p>Your information is encrypted and protected</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="requirements-checklist">
+                        <h3>What you'll need:</h3>
+                        <ul>
+                            <li><i class="fas fa-id-card"></i> Valid driver's license</li>
+                            <li><i class="fas fa-camera"></i> Clear selfie photo</li>
+                            <li><i class="fas fa-clock"></i> About 2-3 minutes</li>
+                        </ul>
+                    </div>
+
+                    <div class="security-badges">
+                        <div class="badge">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>SSL Encrypted</span>
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-lock"></i>
+                            <span>Privacy Protected</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="nextScreen('license-capture-screen')">
+                        Start Verification
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 4: License Capture -->
+        <div class="screen" id="license-capture-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('identity-intro-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
+                        <span>Step 2 of 6</span>
+                    </div>
+                </div>
+                <h2>Scan your driver's license</h2>
+                <p>Position your license within the frame below</p>
+
+                <div class="upload-container">
+                    <div class="requirements-checklist">
+                        <h3>Requirements:</h3>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Valid and not expired</li>
+                            <li><i class="fas fa-check"></i> All text clearly visible</li>
+                            <li><i class="fas fa-check"></i> No glare or shadows</li>
+                            <li><i class="fas fa-check"></i> Photo shows full license</li>
+                        </ul>
+                    </div>
+
+                    <div class="camera-container" id="license-camera-container">
+                        <div class="camera-overlay">
+                            <div class="license-frame">
+                                <i class="fas fa-id-card"></i>
+                                <p>Position your license here</p>
+                            </div>
+                        </div>
+                        <button class="btn-camera" onclick="captureLicense()">
+                            <i class="fas fa-camera"></i>
+                            Take Photo
+                        </button>
+                        <button class="btn-text" onclick="uploadLicenseFromGallery()">
+                            Upload from Gallery
+                        </button>
+                    </div>
+
+                    <div class="photo-preview" id="license-preview" style="display: none;">
+                        <img id="license-image" alt="License photo">
+                        <div class="preview-actions">
+                            <button class="btn-secondary" onclick="retakeLicense()">
+                                Retake Photo
+                            </button>
+                            <button class="btn-primary" onclick="processLicense()">
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- OCR Processing -->
+                    <div class="ocr-processing" id="license-processing" style="display: none;">
+                        <div class="processing-animation">
+                            <div class="spinner"></div>
+                            <p>Processing your license...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 5: Vehicle Documentation -->
+        <div class="screen" id="vehicle-docs-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('license-capture-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 50%"></div>
+                        </div>
+                        <span>Step 3 of 6</span>
+                    </div>
+                </div>
+                <h2>Document your vehicle</h2>
+                <p>Upload required documents to verify your vehicle eligibility</p>
+
+                <div class="document-checklist">
+                    <div class="doc-item clickable" id="registration-doc" onclick="selectDocument('registration')">
+                        <div class="doc-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="doc-info">
+                            <h4>Vehicle Registration</h4>
+                            <p>Current registration document</p>
+                            <span class="tap-hint">Tap to upload</span>
+                        </div>
+                        <div class="doc-status">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+
+                    <div class="doc-item disabled" id="insurance-doc">
+                        <div class="doc-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="doc-info">
+                            <h4>Insurance Certificate</h4>
+                            <p>Valid auto insurance proof</p>
+                            <span class="tap-hint">Upload registration first</span>
+                        </div>
+                        <div class="doc-status">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="document-upload" id="document-upload" style="display: none;">
+                    <div class="upload-area">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3>Select Document</h3>
+                        <p>Click on a document above to begin upload</p>
+                        <button class="btn-secondary" onclick="startUpload()">
+                            <i class="fas fa-camera"></i>
+                            Start Upload
+                        </button>
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="continue-docs-btn" onclick="nextScreen('vehicle-photos-screen')" disabled>
+                    Continue to Photos
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 6: Vehicle Photos -->
+        <div class="screen" id="vehicle-photos-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('vehicle-docs-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 66%"></div>
+                        </div>
+                        <span>Step 4 of 6</span>
+                    </div>
+                </div>
+                <h2>Take vehicle photos</h2>
+                <p>Great photos help your listing stand out and build trust with guests</p>
+
+                <div class="photo-requirements">
+                    <div class="requirement-item">
+                        <i class="fas fa-sun"></i>
+                        <span>Good lighting (preferably daylight)</span>
+                    </div>
+                    <div class="requirement-item">
+                        <i class="fas fa-eye"></i>
+                        <span>Clear, focused images</span>
+                    </div>
+                    <div class="requirement-item">
+                        <i class="fas fa-expand"></i>
+                        <span>Show full vehicle in frame</span>
+                    </div>
+                </div>
+
+                <div class="photo-grid" id="photo-grid">
+                    <div class="photo-slot" data-type="front">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-car"></i>
+                            <span>Front View</span>
+                            <button class="photo-btn" onclick="captureVehiclePhoto('front')">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="photo-slot" data-type="rear">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-car"></i>
+                            <span>Rear View</span>
+                            <button class="photo-btn" onclick="captureVehiclePhoto('rear')">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="photo-slot" data-type="driver">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-car"></i>
+                            <span>Driver Side</span>
+                            <button class="photo-btn" onclick="captureVehiclePhoto('driver')">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="photo-slot" data-type="passenger">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-car"></i>
+                            <span>Passenger Side</span>
+                            <button class="photo-btn" onclick="captureVehiclePhoto('passenger')">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="photo-slot" data-type="interior-front">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-car"></i>
+                            <span>Interior Front</span>
+                            <button class="photo-btn" onclick="captureVehiclePhoto('interior-front')">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="photo-slot" data-type="interior-rear">
+                        <div class="photo-placeholder">
+                            <i class="fas fa-car"></i>
+                            <span>Interior Rear</span>
+                            <button class="photo-btn" onclick="captureVehiclePhoto('interior-rear')">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="photo-progress">
+                    <span id="photo-count">0 of 6 photos completed</span>
+                    <div class="photo-progress-bar">
+                        <div class="photo-progress-fill" id="photo-progress-fill"></div>
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="continue-photos-btn" onclick="nextScreen('pricing-screen')" disabled>
+                    Continue to Pricing
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 7: Pricing Setup -->
+        <div class="screen" id="pricing-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('vehicle-photos-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 83%"></div>
+                        </div>
+                        <span>Step 5 of 6</span>
+                    </div>
+                </div>
+                <h2>Set your pricing</h2>
+                <p>Our smart pricing helps you stay competitive while maximizing earnings</p>
+
+                <div class="market-info">
+                    <div class="market-rate">
+                        <h3>Market Rate in Your Area</h3>
+                        <div class="rate-range">
+                            <span class="rate">$45 - $65</span>
+                            <span class="period">per day</span>
+                        </div>
+                        <p>Based on similar vehicles in San Jose</p>
+                    </div>
+                </div>
+
+                <div class="pricing-calculator">
+                    <div class="calculator-header">
+                        <h3>Earnings Calculator</h3>
+                        <i class="fas fa-calculator"></i>
+                    </div>
+
+                    <div class="price-input-section">
+                        <label for="dailyRate">Your Daily Rate</label>
+                        <div class="price-input">
+                            <span class="currency">$</span>
+                            <input type="number" id="dailyRate" value="55" min="25" max="200">
+                            <span class="period">/day</span>
+                        </div>
+                    </div>
+
+                    <div class="availability-input">
+                        <label for="daysPerMonth">Available Days per Month</label>
+                        <input type="range" id="daysPerMonth" min="5" max="30" value="18" oninput="updateEarnings()">
+                        <div class="range-labels">
+                            <span>5 days</span>
+                            <span id="days-value">18 days</span>
+                            <span>30 days</span>
+                        </div>
+                    </div>
+
+                    <div class="earnings-breakdown">
+                        <div class="earnings-row">
+                            <span>Daily Rate:</span>
+                            <span id="calc-daily-rate">$55</span>
+                        </div>
+                        <div class="earnings-row">
+                            <span>Available Days:</span>
+                            <span id="calc-days">18 days</span>
+                        </div>
+                        <div class="earnings-row total">
+                            <span>Monthly Earnings:</span>
+                            <span id="calc-monthly">$990</span>
+                        </div>
+                        <div class="earnings-row annual">
+                            <span>Annual Potential:</span>
+                            <span id="calc-annual">$11,880</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pricing-options">
+                    <div class="option-toggle">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="weekendPremium" checked>
+                            <span class="checkmark"></span>
+                            Weekend premium (+$10/day Fri-Sun)
+                        </label>
+                    </div>
+                    <div class="option-toggle">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="instantBook" checked>
+                            <span class="checkmark"></span>
+                            Allow instant booking (increases bookings by 40%)
+                        </label>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="nextScreen('profile-screen')">
+                    Continue to Profile
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 8: Profile Completion -->
+        <div class="screen" id="profile-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('pricing-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                        <span>Step 6 of 6</span>
+                    </div>
+                </div>
+                <h2>Complete your host profile</h2>
+                <p>A great profile helps guests feel confident booking with you</p>
+
+                <form id="profile-form" class="form">
+                    <div class="profile-photo-section">
+                        <div class="photo-upload" id="profile-photo-upload">
+                            <div class="photo-placeholder">
+                                <i class="fas fa-camera"></i>
+                                <span>Add Profile Photo</span>
+                            </div>
+                            <button type="button" class="btn-text" onclick="uploadProfilePhoto()">
+                                Upload Photo (Recommended)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hostBio">About You</label>
+                        <textarea id="hostBio" name="hostBio" rows="4" placeholder="Tell guests a bit about yourself. Share your hosting motivation, interests, or what makes you a great host..." maxlength="500"></textarea>
+                        <div class="char-counter">
+                            <span id="bio-count">0</span>/500 characters
+                        </div>
+                        <div class="error-message" id="hostBio-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="responseTime">Response Time Commitment</label>
+                        <select id="responseTime" name="responseTime" required>
+                            <option value="">Select response time</option>
+                            <option value="within-hour">Within 1 hour</option>
+                            <option value="within-2hours">Within 2 hours</option>
+                            <option value="within-4hours">Within 4 hours</option>
+                            <option value="within-day">Within 24 hours</option>
+                        </select>
+                        <div class="error-message" id="responseTime-error"></div>
+                    </div>
+
+                    <div class="delivery-options">
+                        <h3>Delivery Options</h3>
+                        <div class="option-toggle">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="homeDelivery">
+                                <span class="checkmark"></span>
+                                Offer home pickup/delivery
+                            </label>
+                        </div>
+                        <div class="delivery-details" id="delivery-details" style="display: none;">
+                            <div class="form-group">
+                                <label for="deliveryRadius">Delivery Radius (miles)</label>
+                                <select id="deliveryRadius" name="deliveryRadius">
+                                    <option value="5">5 miles</option>
+                                    <option value="10" selected>10 miles</option>
+                                    <option value="15">15 miles</option>
+                                    <option value="20">20 miles</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="deliveryFee">Delivery Fee</label>
+                                <div class="price-input">
+                                    <span class="currency">$</span>
+                                    <input type="number" id="deliveryFee" value="15" min="0" max="100">
+                                    <span class="period">each way</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specialInstructions">Special Instructions (Optional)</label>
+                        <textarea id="specialInstructions" name="specialInstructions" rows="3" placeholder="Any special pickup/return instructions, parking details, or house rules..." maxlength="300"></textarea>
+                        <div class="char-counter">
+                            <span id="instructions-count">0</span>/300 characters
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="complete-profile-btn">
+                        Complete Profile
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Screen 9: Review & Launch -->
+        <div class="screen" id="review-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('profile-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Review your listing</h2>
+                </div>
+
+                <div class="listing-preview">
+                    <div class="preview-header">
+                        <h3>How guests will see your listing</h3>
+                    </div>
+
+                    <div class="vehicle-card">
+                        <div class="vehicle-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div class="verification-badges">
+                                <span class="badge">✓ Verified</span>
+                            </div>
+                        </div>
+                        <div class="vehicle-info">
+                            <h4 id="preview-vehicle-name">2020 Honda Civic</h4>
+                            <div class="vehicle-details">
+                                <span><i class="fas fa-users"></i> 5 seats</span>
+                                <span><i class="fas fa-cog"></i> Automatic</span>
+                                <span><i class="fas fa-gas-pump"></i> 32 MPG</span>
+                            </div>
+                            <div class="pricing-display">
+                                <span class="price">$55</span>
+                                <span class="period">/day</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="earnings-projection">
+                        <h4>Projected Monthly Earnings</h4>
+                        <div class="projection-card">
+                            <div class="projection-item">
+                                <span class="label">Conservative (12 days)</span>
+                                <span class="amount">$660</span>
+                            </div>
+                            <div class="projection-item highlighted">
+                                <span class="label">Expected (18 days)</span>
+                                <span class="amount">$990</span>
+                            </div>
+                            <div class="projection-item">
+                                <span class="label">Optimistic (25 days)</span>
+                                <span class="amount">$1,375</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="verification-status">
+                        <h4>Verification Status</h4>
+                        <div class="status-list">
+                            <div class="status-item completed">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Identity Verified</span>
+                            </div>
+                            <div class="status-item completed">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Vehicle Documented</span>
+                            </div>
+                            <div class="status-item completed">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Photos Uploaded</span>
+                            </div>
+                            <div class="status-item pending">
+                                <i class="fas fa-clock"></i>
+                                <span>Background Check (Processing)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="next-steps">
+                    <h4>What happens next?</h4>
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h5>Review & Approval</h5>
+                            <p>We'll review your documents (usually within 24 hours)</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h5>Listing Goes Live</h5>
+                            <p>Your car becomes available for bookings</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h5>Start Earning</h5>
+                            <p>Receive and manage booking requests</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-acceptance">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="hostTerms" required>
+                        <span class="checkmark"></span>
+                        I agree to the <a href="#" class="link">Host Terms of Service</a> and <a href="#" class="link">Host Protection Policy</a>
+                    </label>
+                </div>
+
+                <button class="btn-primary" id="launch-listing-btn" onclick="launchListing()" disabled>
+                    Publish My Listing
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 10: Success & Launch -->
+        <div class="screen" id="success-screen">
+            <div class="screen-content">
+                <div class="success-animation">
+                    <div class="checkmark-circle">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                <h1>Congratulations!</h1>
+                <p>Your car is now listed and will be live once verification is complete.</p>
+
+                <div class="success-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>24 hours</h4>
+                            <p>Average approval time</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>3-5 days</h4>
+                            <p>Time to first booking</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>$990/month</h4>
+                            <p>Your earning potential</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="next-actions">
+                    <h3>Ready to get started?</h3>
+                    <div class="action-cards">
+                        <div class="action-card" onclick="goToHostDashboard()">
+                            <div class="action-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <h4>Host Dashboard</h4>
+                            <p>Manage your listing and bookings</p>
+                        </div>
+                        <div class="action-card" onclick="shareOnSocial()">
+                            <div class="action-icon">
+                                <i class="fas fa-share-alt"></i>
+                            </div>
+                            <h4>Share Your Listing</h4>
+                            <p>Tell friends and family</p>
+                        </div>
+                        <div class="action-card" onclick="openHostEducation()">
+                            <div class="action-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h4>Host Education</h4>
+                            <p>Tips for successful hosting</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="support-section">
+                    <h4>Need help?</h4>
+                    <p>Our host success team is here to support you</p>
+                    <div class="support-options">
+                        <button class="btn-secondary" onclick="contactSupport()">
+                            <i class="fas fa-headset"></i>
+                            Contact Support
+                        </button>
+                        <button class="btn-text" onclick="joinHostCommunity()">
+                            <i class="fas fa-users"></i>
+                            Join Host Community
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works Modal -->
+        <div class="modal" id="how-it-works-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>How Host Onboarding Works</h2>
+                    <button class="btn-close" onclick="closeHowItWorks()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="how-it-works-content">
+                    <div class="step-explanation">
+                        <div class="step-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <h3>1. Vehicle Information</h3>
+                        <p>Tell us about your car to check eligibility and estimate earnings</p>
+                    </div>
+                    <div class="step-explanation">
+                        <div class="step-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>2. Identity Verification</h3>
+                        <p>Quick ID and background check to keep the community safe</p>
+                    </div>
+                    <div class="step-explanation">
+                        <div class="step-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <h3>3. Documentation & Photos</h3>
+                        <p>Upload required documents and take photos of your vehicle</p>
+                    </div>
+                    <div class="step-explanation">
+                        <div class="step-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <h3>4. Pricing & Profile</h3>
+                        <p>Set competitive pricing and complete your host profile</p>
+                    </div>
+                    <div class="step-explanation">
+                        <div class="step-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3>5. Launch & Earn</h3>
+                        <p>Review everything and publish your listing to start earning</p>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="closeHowItWorks()">
+                    Got It
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

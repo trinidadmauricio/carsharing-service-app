@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarShare - Sign In</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="logo">
+                <i class="fas fa-car"></i>
+                <span>CarShare</span>
+            </div>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container" id="app-container">
+
+        <!-- Screen 1: Login Entry -->
+        <div class="screen active" id="login-screen">
+            <div class="screen-content">
+                <div class="auth-header">
+                    <div class="logo">
+                        <i class="fas fa-car"></i>
+                        <span>CarShare</span>
+                    </div>
+                    <h1>Welcome back</h1>
+                    <p>Sign in to your account to continue</p>
+                </div>
+
+                <form id="login-form" class="form">
+                    <div class="form-group">
+                        <label for="loginEmail">Email or Username</label>
+                        <input type="text" id="loginEmail" name="loginEmail" required>
+                        <div class="error-message" id="loginEmail-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="loginPassword" name="loginPassword" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="error-message" id="loginPassword-error"></div>
+                    </div>
+
+                    <div class="form-options">
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="rememberMe" name="rememberMe">
+                                <span class="checkmark"></span>
+                                Remember me
+                            </label>
+                        </div>
+                        <button type="button" class="btn-text forgot-link" onclick="nextScreen('password-reset-screen')">
+                            Forgot password?
+                        </button>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="sign-in-btn">
+                        Sign In
+                    </button>
+
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+
+                    <button type="button" class="btn-social google" onclick="socialLogin('google')">
+                        <i class="fab fa-google"></i>
+                        Continue with Google
+                    </button>
+                    <button type="button" class="btn-social apple" onclick="socialLogin('apple')">
+                        <i class="fab fa-apple"></i>
+                        Continue with Apple
+                    </button>
+
+                    <div class="auth-footer">
+                        <span>Don't have an account?</span>
+                        <button type="button" class="btn-text" onclick="showRegister()">
+                            Sign up
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Screen 2: Biometric Authentication -->
+        <div class="screen" id="biometric-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('login-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+
+                <div class="biometric-content">
+                    <div class="biometric-icon">
+                        <i class="fas fa-fingerprint" id="biometric-icon"></i>
+                    </div>
+                    <h2 id="biometric-title">Use Touch ID</h2>
+                    <p id="biometric-subtitle">Sign in to CarShare with your fingerprint</p>
+
+                    <div class="biometric-animation">
+                        <div class="pulse-ring"></div>
+                        <div class="pulse-ring delay-1"></div>
+                        <div class="pulse-ring delay-2"></div>
+                    </div>
+
+                    <div class="biometric-actions">
+                        <button class="btn-text" onclick="cancelBiometric()">Cancel</button>
+                        <button class="btn-text" onclick="useFallback()">Use Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 3: Two-Factor Authentication -->
+        <div class="screen" id="two-factor-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('login-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+
+                <div class="verification-content">
+                    <div class="verification-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2>Two-Factor Authentication</h2>
+                    <p>Enter the 6-digit code sent to <span id="masked-contact">•••••••@gmail.com</span></p>
+
+                    <div class="pin-input-container">
+                        <input type="text" class="pin-input" maxlength="1" data-index="0">
+                        <input type="text" class="pin-input" maxlength="1" data-index="1">
+                        <input type="text" class="pin-input" maxlength="1" data-index="2">
+                        <input type="text" class="pin-input" maxlength="1" data-index="3">
+                        <input type="text" class="pin-input" maxlength="1" data-index="4">
+                        <input type="text" class="pin-input" maxlength="1" data-index="5">
+                    </div>
+
+                    <div class="verification-actions">
+                        <div class="resend-section">
+                            <span>Didn't receive the code?</span>
+                            <button class="btn-text" id="resend-2fa-btn" onclick="resend2FA()" disabled>
+                                Resend in <span id="countdown-2fa">60</span>s
+                            </button>
+                        </div>
+                        <button class="btn-primary" id="verify-2fa-btn" onclick="verify2FA()" disabled>
+                            Verify & Sign In
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 4: Password Reset Request -->
+        <div class="screen" id="password-reset-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('login-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+
+                <div class="reset-content">
+                    <div class="reset-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h2>Reset your password</h2>
+                    <p>Enter your email address and we'll send you a link to reset your password</p>
+
+                    <form id="password-reset-form" class="form">
+                        <div class="form-group">
+                            <label for="resetEmail">Email address</label>
+                            <input type="email" id="resetEmail" name="resetEmail" required>
+                            <div class="error-message" id="resetEmail-error"></div>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="send-reset-btn">
+                            Send Reset Link
+                        </button>
+
+                        <button type="button" class="btn-text" onclick="prevScreen('login-screen')">
+                            Back to Sign In
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 5: Reset Link Sent -->
+        <div class="screen" id="reset-sent-screen">
+            <div class="screen-content">
+                <div class="confirmation-content">
+                    <div class="confirmation-icon">
+                        <i class="fas fa-envelope-open"></i>
+                    </div>
+                    <h2>Check your email</h2>
+                    <p>We've sent a password reset link to <span id="reset-email-display"></span></p>
+
+                    <div class="next-steps">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <span>Check your email inbox (and spam folder)</span>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <span>Click the reset link in the email</span>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <span>Create a new password</span>
+                        </div>
+                    </div>
+
+                    <div class="reset-actions">
+                        <button class="btn-text" id="resend-reset-btn" onclick="resendResetLink()" disabled>
+                            Resend email in <span id="countdown-reset">60</span>s
+                        </button>
+                        <button class="btn-secondary" onclick="nextScreen('login-screen')">
+                            Back to Sign In
+                        </button>
+                        <button class="btn-text" onclick="simulateEmailClick()">
+                            <i class="fas fa-external-link-alt"></i>
+                            Simulate Email Link (Demo)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 6: New Password Creation -->
+        <div class="screen" id="new-password-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="nextScreen('reset-sent-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+
+                <div class="new-password-content">
+                    <div class="reset-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h2>Create new password</h2>
+                    <p>Your new password must be different from your previous password</p>
+
+                    <form id="new-password-form" class="form">
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <div class="password-input">
+                                <input type="password" id="newPassword" name="newPassword" required>
+                                <button type="button" class="password-toggle" onclick="togglePassword('newPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength" id="new-password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill"></div>
+                                </div>
+                                <span class="strength-text">Password strength</span>
+                            </div>
+                            <div class="error-message" id="newPassword-error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmNewPassword">Confirm New Password</label>
+                            <div class="password-input">
+                                <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+                                <button type="button" class="password-toggle" onclick="togglePassword('confirmNewPassword')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="error-message" id="confirmNewPassword-error"></div>
+                        </div>
+
+                        <div class="password-requirements">
+                            <h4>Password requirements:</h4>
+                            <div class="requirement" id="req-length">
+                                <i class="fas fa-times"></i>
+                                <span>At least 8 characters</span>
+                            </div>
+                            <div class="requirement" id="req-uppercase">
+                                <i class="fas fa-times"></i>
+                                <span>One uppercase letter</span>
+                            </div>
+                            <div class="requirement" id="req-lowercase">
+                                <i class="fas fa-times"></i>
+                                <span>One lowercase letter</span>
+                            </div>
+                            <div class="requirement" id="req-number">
+                                <i class="fas fa-times"></i>
+                                <span>One number</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="reset-password-btn" disabled>
+                            Reset Password
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 7: Password Reset Success -->
+        <div class="screen" id="password-success-screen">
+            <div class="screen-content">
+                <div class="success-content">
+                    <div class="success-animation">
+                        <div class="checkmark-circle">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <h1>Password reset successful!</h1>
+                    <p>Your password has been successfully updated. You can now sign in with your new password.</p>
+
+                    <div class="security-notice">
+                        <div class="notice-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="notice-content">
+                            <h4>Security Tips</h4>
+                            <ul>
+                                <li>Keep your password private and secure</li>
+                                <li>Use a unique password for CarShare</li>
+                                <li>Enable two-factor authentication for extra security</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="success-actions">
+                        <button class="btn-primary" onclick="nextScreen('login-screen')">
+                            Continue to Sign In
+                        </button>
+                        <button class="btn-text" onclick="enableTwoFactor()">
+                            <i class="fas fa-shield-alt"></i>
+                            Enable Two-Factor Authentication
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Management - CarShare SV</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="logo">
+                <i class="fas fa-car"></i>
+                <span>CarShare</span>
+            </div>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container" id="app-container">
+
+        <!-- Screen 1: Active Trip Dashboard -->
+        <div class="screen active" id="active-trip-screen">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="goToBookings()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Active Trip</h2>
+                    <button class="help-btn" onclick="showEmergencyContact()">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+
+                <!-- Trip Status Card -->
+                <div class="trip-status-card">
+                    <div class="status-header">
+                        <div class="trip-indicator active">
+                            <i class="fas fa-car"></i>
+                            <span class="status-text">In Progress</span>
+                        </div>
+                        <div class="trip-timer">
+                            <span class="time-remaining" id="time-remaining">2h 45m</span>
+                            <span class="time-label">remaining</span>
+                        </div>
+                    </div>
+
+                    <div class="vehicle-info-compact">
+                        <div class="vehicle-thumb economy">
+                            <svg class="car-svg" viewBox="0 0 100 60" fill="currentColor">
+                                <path d="M15 40 Q10 35 15 30 L25 25 Q30 20 40 20 L60 20 Q70 20 75 25 L85 30 Q90 35 85 40 L80 45 Q75 50 65 50 L35 50 Q25 50 20 45 Z"/>
+                                <circle cx="25" cy="45" r="8" fill="currentColor" opacity="0.7"/>
+                                <circle cx="75" cy="45" r="8" fill="currentColor" opacity="0.7"/>
+                                <rect x="35" y="25" width="30" height="15" rx="2" fill="currentColor" opacity="0.5"/>
+                            </svg>
+                        </div>
+                        <div class="vehicle-details">
+                            <h3>Honda Civic 2022</h3>
+                            <p>Maria S. • Booking #HC2024-001234</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Details -->
+                <div class="trip-details-section">
+                    <div class="detail-card">
+                        <div class="detail-item">
+                            <div class="detail-icon pickup">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="detail-content">
+                                <span class="detail-label">Pickup</span>
+                                <span class="detail-value">Jan 25, 2:00 PM</span>
+                                <span class="detail-location">Downtown Garage</span>
+                            </div>
+                        </div>
+                        <div class="detail-divider"></div>
+                        <div class="detail-item">
+                            <div class="detail-icon return">
+                                <i class="fas fa-stop-circle"></i>
+                            </div>
+                            <div class="detail-content">
+                                <span class="detail-label">Return by</span>
+                                <span class="detail-value">Jan 25, 6:00 PM</span>
+                                <span class="detail-location">Same location</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Cost Tracker -->
+                <div class="cost-tracker-card">
+                    <div class="cost-header">
+                        <h3>Current Trip Cost</h3>
+                        <span class="cost-amount" id="current-cost">$22.50</span>
+                    </div>
+                    <div class="cost-breakdown">
+                        <div class="cost-item">
+                            <span>Base rate (2.5h × $8.50)</span>
+                            <span>$21.25</span>
+                        </div>
+                        <div class="cost-item">
+                            <span>Service fee</span>
+                            <span>$1.25</span>
+                        </div>
+                        <div class="cost-warning" id="cost-warning" style="display: none;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Exceeding original booking time</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions-grid">
+                    <button class="action-btn extend" onclick="showExtendTrip()">
+                        <i class="fas fa-clock"></i>
+                        <span>Extend Trip</span>
+                    </button>
+                    <button class="action-btn directions" onclick="openDirections()">
+                        <i class="fas fa-directions"></i>
+                        <span>Directions</span>
+                    </button>
+                    <button class="action-btn contact" onclick="contactHost()">
+                        <i class="fas fa-comment"></i>
+                        <span>Contact Host</span>
+                    </button>
+                    <button class="action-btn emergency" onclick="showEmergencyContact()">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Emergency</span>
+                    </button>
+                </div>
+
+                <!-- Return Location Reminder -->
+                <div class="return-reminder">
+                    <div class="reminder-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="reminder-content">
+                        <h4>Remember to return to</h4>
+                        <p>Downtown Parking Garage<br>123 S 1st Street, San José</p>
+                        <button class="btn-text" onclick="openReturnDirections()">
+                            <i class="fas fa-directions"></i> Get directions
+                        </button>
+                    </div>
+                </div>
+
+                <!-- End Trip Button -->
+                <button class="btn-primary end-trip-btn" onclick="nextScreen('trip-return-screen')">
+                    <i class="fas fa-stop"></i>
+                    End Trip & Begin Return
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 2: Trip Return Process -->
+        <div class="screen" id="trip-return-screen" style="display: none; visibility: hidden;">
+            <div class="screen-content">
+                <div class="header">
+                    <button class="btn-back" onclick="prevScreen('active-trip-screen')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="progress-indicator">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 50%"></div>
+                        </div>
+                        <span>Step 1 of 2</span>
+                    </div>
+                </div>
+
+                <h2>Return Your Vehicle</h2>
+                <p>Please complete the return checklist to finalize your trip</p>
+
+                <!-- Return Location Confirmation -->
+                <div class="return-location-card">
+                    <div class="location-header">
+                        <h3>Confirm Return Location</h3>
+                        <div class="location-status verified">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Verified</span>
+                        </div>
+                    </div>
+                    <div class="location-details">
+                        <div class="location-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="location-info">
+                            <h4>Downtown Parking Garage</h4>
+                            <p>123 S 1st Street, San José, CA 95113</p>
+                            <span class="location-note">Same as pickup location</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Return Checklist -->
+                <div class="return-checklist">
+                    <h3>Vehicle Inspection</h3>
+                    <div class="checklist-items">
+                        <div class="checklist-item" data-check="fuel">
+                            <div class="check-content">
+                                <div class="check-icon">
+                                    <i class="fas fa-gas-pump"></i>
+                                </div>
+                                <div class="check-details">
+                                    <h4>Fuel Level</h4>
+                                    <p>Return with same fuel level as pickup</p>
+                                </div>
+                            </div>
+                            <div class="check-status">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" onchange="updateChecklist(this, 'fuel')">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="checklist-item" data-check="cleanliness">
+                            <div class="check-content">
+                                <div class="check-icon">
+                                    <i class="fas fa-broom"></i>
+                                </div>
+                                <div class="check-details">
+                                    <h4>Interior Cleanliness</h4>
+                                    <p>Remove trash and personal items</p>
+                                </div>
+                            </div>
+                            <div class="check-status">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" onchange="updateChecklist(this, 'cleanliness')">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="checklist-item" data-check="damage">
+                            <div class="check-content">
+                                <div class="check-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="check-details">
+                                    <h4>Damage Check</h4>
+                                    <p>Report any new damage or issues</p>
+                                </div>
+                            </div>
+                            <div class="check-status">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" onchange="updateChecklist(this, 'damage')">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="checklist-item" data-check="odometer">
+                            <div class="check-content">
+                                <div class="check-icon">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                <div class="check-details">
+                                    <h4>Final Odometer</h4>
+                                    <p>Record ending mileage</p>
+                                </div>
+                            </div>
+                            <div class="check-input">
+                                <input type="number" placeholder="Miles" id="final-odometer" onchange="updateOdometer(this)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo Documentation -->
+                <div class="photo-documentation">
+                    <h3>Photo Documentation</h3>
+                    <p>Take photos to complete your return</p>
+                    <div class="photo-grid">
+                        <div class="photo-item" data-photo="exterior">
+                            <div class="photo-placeholder" onclick="takePhoto('exterior')">
+                                <i class="fas fa-camera"></i>
+                                <span>Vehicle Exterior</span>
+                            </div>
+                            <div class="photo-status">
+                                <i class="fas fa-check-circle" style="display: none;"></i>
+                            </div>
+                        </div>
+                        <div class="photo-item" data-photo="fuel">
+                            <div class="photo-placeholder" onclick="takePhoto('fuel')">
+                                <i class="fas fa-gas-pump"></i>
+                                <span>Fuel Gauge</span>
+                            </div>
+                            <div class="photo-status">
+                                <i class="fas fa-check-circle" style="display: none;"></i>
+                            </div>
+                        </div>
+                        <div class="photo-item" data-photo="odometer">
+                            <div class="photo-placeholder" onclick="takePhoto('odometer')">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Odometer</span>
+                            </div>
+                            <div class="photo-status">
+                                <i class="fas fa-check-circle" style="display: none;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Summary -->
+                <div class="trip-summary-card">
+                    <h3>Trip Summary</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">Duration</span>
+                            <span class="summary-value" id="trip-duration">3h 15m</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Miles driven</span>
+                            <span class="summary-value" id="miles-driven">45 miles</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Final cost</span>
+                            <span class="summary-value" id="final-cost">$27.50</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Return Process -->
+                <div class="key-return-section">
+                    <h3>Return Keys</h3>
+                    <div class="key-return-options">
+                        <div class="return-option selected" data-option="host">
+                            <div class="option-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="option-details">
+                                <h4>Hand to Host</h4>
+                                <p>Maria S. will meet you at the location</p>
+                            </div>
+                            <div class="option-status">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="return-option" data-option="lockbox">
+                            <div class="option-icon">
+                                <i class="fas fa-key"></i>
+                            </div>
+                            <div class="option-details">
+                                <h4>Use Lockbox</h4>
+                                <p>Return keys to secure lockbox</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="complete-return-btn" onclick="nextScreen('trip-completion-screen')" disabled>
+                    Complete Return
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 3: Trip Completion -->
+        <div class="screen" id="trip-completion-screen" style="display: none; visibility: hidden;">
+            <div class="screen-content">
+                <div class="completion-animation">
+                    <div class="checkmark-circle">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+
+                <h1>Trip Complete!</h1>
+                <p>Thanks for using CarShare. Your trip has been successfully completed.</p>
+
+                <!-- Final Trip Summary -->
+                <div class="final-summary-card">
+                    <div class="summary-header">
+                        <div class="vehicle-thumb economy">
+                            <svg class="car-svg" viewBox="0 0 100 60" fill="currentColor">
+                                <path d="M15 40 Q10 35 15 30 L25 25 Q30 20 40 20 L60 20 Q70 20 75 25 L85 30 Q90 35 85 40 L80 45 Q75 50 65 50 L35 50 Q25 50 20 45 Z"/>
+                                <circle cx="25" cy="45" r="8" fill="currentColor" opacity="0.7"/>
+                                <circle cx="75" cy="45" r="8" fill="currentColor" opacity="0.7"/>
+                                <rect x="35" y="25" width="30" height="15" rx="2" fill="currentColor" opacity="0.5"/>
+                            </svg>
+                        </div>
+                        <div class="summary-info">
+                            <h3>Honda Civic 2022</h3>
+                            <p>Jan 25, 2024 • 3h 15m</p>
+                            <span class="booking-ref">Booking #HC2024-001234</span>
+                        </div>
+                    </div>
+
+                    <div class="receipt-details">
+                        <div class="receipt-row">
+                            <span>Base rate (3.25h × $8.50)</span>
+                            <span>$27.63</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Service fee</span>
+                            <span>$2.50</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Insurance</span>
+                            <span>$4.00</span>
+                        </div>
+                        <div class="receipt-row total">
+                            <span>Total charged</span>
+                            <span>$34.13</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rating System -->
+                <div class="rating-section">
+                    <h3>Rate Your Experience</h3>
+
+                    <div class="rating-category">
+                        <h4>Vehicle</h4>
+                        <div class="star-rating" data-rating="vehicle">
+                            <i class="fas fa-star" data-value="1"></i>
+                            <i class="fas fa-star" data-value="2"></i>
+                            <i class="fas fa-star" data-value="3"></i>
+                            <i class="fas fa-star" data-value="4"></i>
+                            <i class="fas fa-star" data-value="5"></i>
+                        </div>
+                    </div>
+
+                    <div class="rating-category">
+                        <h4>Host (Maria S.)</h4>
+                        <div class="star-rating" data-rating="host">
+                            <i class="fas fa-star" data-value="1"></i>
+                            <i class="fas fa-star" data-value="2"></i>
+                            <i class="fas fa-star" data-value="3"></i>
+                            <i class="fas fa-star" data-value="4"></i>
+                            <i class="fas fa-star" data-value="5"></i>
+                        </div>
+                    </div>
+
+                    <div class="rating-category">
+                        <h4>Overall Experience</h4>
+                        <div class="star-rating" data-rating="overall">
+                            <i class="fas fa-star" data-value="1"></i>
+                            <i class="fas fa-star" data-value="2"></i>
+                            <i class="fas fa-star" data-value="3"></i>
+                            <i class="fas fa-star" data-value="4"></i>
+                            <i class="fas fa-star" data-value="5"></i>
+                        </div>
+                    </div>
+
+                    <div class="rating-comment">
+                        <textarea placeholder="Leave a comment (optional)" maxlength="500"></textarea>
+                    </div>
+                </div>
+
+                <!-- Security Deposit Info -->
+                <div class="deposit-info-card">
+                    <div class="deposit-header">
+                        <i class="fas fa-shield-check"></i>
+                        <h3>Security Deposit</h3>
+                    </div>
+                    <p>Your $200 security deposit will be released within 24-48 hours after our inspection.</p>
+                    <div class="deposit-timeline">
+                        <div class="timeline-item completed">
+                            <i class="fas fa-check"></i>
+                            <span>Vehicle returned</span>
+                        </div>
+                        <div class="timeline-item pending">
+                            <i class="fas fa-clock"></i>
+                            <span>Inspection (24-48h)</span>
+                        </div>
+                        <div class="timeline-item">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Deposit released</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="completion-actions">
+                    <button class="btn-primary" onclick="submitRating()">
+                        Submit Rating
+                    </button>
+                    <button class="btn-secondary" onclick="downloadReceipt()">
+                        <i class="fas fa-download"></i>
+                        Download Receipt
+                    </button>
+                    <button class="btn-secondary" onclick="bookAgain()">
+                        <i class="fas fa-car"></i>
+                        Book Again
+                    </button>
+                    <button class="btn-text" onclick="shareExperience()">
+                        <i class="fas fa-share"></i>
+                        Share Experience
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Extend Trip Modal -->
+        <div class="modal" id="extend-trip-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Extend Your Trip</h2>
+                    <button class="btn-close" onclick="closeExtendTrip()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="extend-options">
+                    <div class="extend-option" data-hours="1">
+                        <span class="extend-duration">+1 hour</span>
+                        <span class="extend-cost">+$8.50</span>
+                    </div>
+                    <div class="extend-option" data-hours="2">
+                        <span class="extend-duration">+2 hours</span>
+                        <span class="extend-cost">+$17.00</span>
+                    </div>
+                    <div class="extend-option" data-hours="4">
+                        <span class="extend-duration">+4 hours</span>
+                        <span class="extend-cost">+$34.00</span>
+                    </div>
+                </div>
+                <p class="extend-note">Extension subject to host approval and vehicle availability</p>
+                <button class="btn-primary" onclick="requestExtension()">
+                    Request Extension
+                </button>
+            </div>
+        </div>
+
+        <!-- Emergency Contact Modal -->
+        <div class="modal" id="emergency-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Emergency Assistance</h2>
+                    <button class="btn-close" onclick="closeEmergency()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="emergency-options">
+                    <button class="emergency-btn critical" onclick="call911()">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Emergency Services</span>
+                        <span class="emergency-number">911</span>
+                    </button>
+                    <button class="emergency-btn roadside" onclick="callRoadside()">
+                        <i class="fas fa-tools"></i>
+                        <span>Roadside Assistance</span>
+                        <span class="emergency-number">24/7 Support</span>
+                    </button>
+                    <button class="emergency-btn support" onclick="callSupport()">
+                        <i class="fas fa-headset"></i>
+                        <span>CarShare Support</span>
+                        <span class="emergency-number">(555) 123-4567</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photo Capture Modal -->
+        <div class="modal" id="photo-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="photo-modal-title">Take Photo</h2>
+                    <button class="btn-close" onclick="closePhotoModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="camera-container">
+                    <div class="camera-overlay">
+                        <div class="photo-frame">
+                            <i class="fas fa-camera" id="photo-icon"></i>
+                            <p id="photo-instruction">Position and capture</p>
+                        </div>
+                    </div>
+                    <button class="btn-camera" onclick="capturePhoto()">
+                        <i class="fas fa-camera"></i>
+                        Take Photo
+                    </button>
+                    <button class="btn-text" onclick="uploadFromGallery()">
+                        Upload from Gallery
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

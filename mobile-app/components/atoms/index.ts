@@ -1,0 +1,13 @@
+/**
+ * Atoms Components Index
+ * Basic building blocks - Will be implemented in Day 2
+ */
+
+// Export atoms as they are created
+// export { Button } from './Button';
+// export { Input } from './Input';
+// export { Card } from './Card';
+// export { Badge } from './Badge';
+// export { Avatar } from './Avatar';
+// export { ProgressBar } from './ProgressBar';
+// export { Chip } from './Chip';

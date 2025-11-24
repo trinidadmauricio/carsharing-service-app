@@ -1,0 +1,631 @@
+# Reglas de Desarrollo - CarSharing Service App
+
+## 🎯 Visión General
+
+Este proyecto es una aplicación React Native/Expo para un servicio de car-sharing. Sigue principios de desarrollo de alta calidad, TDD, seguridad y mejores prácticas de la industria.
+
+> **📚 Agents Especializados:** Este proyecto incluye agents especializados en `.cursor/agents/` que proporcionan conocimiento detallado en áreas específicas. Consulta `.cursor/agents/README.md` para ver la lista completa y cuándo usar cada uno.
+
+---
+
+## 🛠️ Stack Tecnológico
+
+### Core Technologies
+
+- **React Native**: 0.73.0
+- **Expo**: ~50.0.0
+- **Expo Router**: ~3.4.0 (file-based routing)
+- **TypeScript**: 5.1.3 (strict mode)
+- **TanStack React Query**: ^5.0.0 (data fetching & state management)
+
+### Key Libraries
+
+- `expo-secure-store`: Almacenamiento seguro de tokens
+- `expo-local-authentication`: Autenticación biométrica
+- `react-native-reanimated`: Animaciones de alto rendimiento
+- `react-native-gesture-handler`: Gestos nativos
+- `react-native-toast-message`: Notificaciones al usuario
+
+---
+
+## 📐 Arquitectura y Patrones
+
+> **📚 Referencia especializada:** Consulta `.cursor/agents/architect-reviewer.md` para evaluación de arquitectura, patrones de diseño, escalabilidad, y decisiones técnicas estratégicas.
+
+### Atomic Design Pattern
+
+```
+components/
+  ├── atoms/        # Componentes básicos (Button, Input, Card)
+  ├── molecules/    # Componentes compuestos (FiltersSheet, PinInput)
+  └── organisms/    # Componentes complejos (formularios completos)
+```
+
+**Reglas:**
+
+- Los átomos son componentes básicos sin dependencias de otros componentes UI
+- Las moléculas combinan átomos
+- Los organismos combinan moléculas y átomos
+- Cada componente debe tener un propósito único y claro
+- Exportar componentes a través de `index.ts` para imports limpios
+
+### Service Layer Pattern
+
+```
+services/
+  ├── modes/
+  │   ├── mock/     # Implementación mock para desarrollo/testing
+  │   └── rest/     # Implementación REST real
+  └── apiClient.ts  # Cliente HTTP centralizado
+```
+
+**Reglas:**
+
+- Todos los servicios deben tener interfaces TypeScript definidas
+- Implementar siempre ambas versiones (mock y rest)
+- Usar el patrón Strategy para intercambiar entre modos
+- El `apiClient` maneja autenticación, refresh tokens y errores globalmente
+
+### Custom Hooks Pattern
+
+```
+hooks/
+  ├── useAuth.ts      # Lógica de autenticación
+  ├── useVehicles.ts  # Lógica de vehículos
+  └── useBooking.ts   # Lógica de reservas
+```
+
+**Reglas:**
+
+- Un hook por dominio de negocio
+- Los hooks encapsulan lógica compleja y estado
+- Usar TanStack Query para operaciones async
+- Mantener hooks simples y enfocados (Single Responsibility)
+
+---
+
+## 🔒 Seguridad
+
+> **📚 Referencia especializada:** Consulta `.cursor/agents/security-auditor.md` para auditorías de seguridad detalladas, checklist completo, y mejores prácticas avanzadas.
+
+### Autenticación y Tokens
+
+- ✅ **NUNCA** almacenar tokens en AsyncStorage o estado plano
+- ✅ Usar `expo-secure-store` para refresh tokens
+- ✅ Access tokens solo en memoria (no persistir)
+- ✅ Implementar refresh automático de tokens antes de expirar
+- ✅ Limpiar tokens al hacer logout
+- ✅ Validar tokens en el lado del servidor siempre
+
+### Datos Sensibles
+
+- ✅ **NUNCA** hardcodear credenciales, API keys o secrets
+- ✅ Usar variables de entorno con prefijo `EXPO_PUBLIC_` para variables públicas
+- ✅ **NUNCA** exponer secrets en el cliente (usar solo en backend)
+- ✅ Validar y sanitizar todas las entradas del usuario
+- ✅ Usar HTTPS siempre para comunicación con API
+
+### Manejo de Errores
+
+- ✅ No exponer detalles técnicos de errores al usuario
+- ✅ No loguear información sensible en producción
+- ✅ Usar códigos de error genéricos para errores de autenticación
+- ✅ Implementar rate limiting en el cliente
+
+### Biometría
+
+- ✅ Usar `expo-local-authentication` para autenticación biométrica
+- ✅ Solicitar permiso antes de usar biometría
+- ✅ Tener fallback a contraseña siempre disponible
+- ✅ No almacenar datos biométricos, solo usarlos para autenticación
+
+---
+
+## 🧪 Test-Driven Development (TDD)
+
+> **📚 Referencia especializada:** Consulta `.cursor/agents/qa-expert.md` para estrategias completas de testing, test coverage, y metodologías de QA.
+
+### Ciclo Red-Green-Refactor
+
+1. **Red**: Escribir test que falle (describe el comportamiento deseado)
+2. **Green**: Escribir código mínimo para pasar el test
+3. **Refactor**: Mejorar código manteniendo tests pasando
+
+### Estructura de Tests
+
+```
+__tests__/
+  ├── components/
+  │   ├── atoms/
+  │   ├── molecules/
+  │   └── organisms/
+  ├── hooks/
+  ├── services/
+  ├── utils/
+  └── integration/
+```
+
+### Reglas de Testing
+
+- ✅ Escribir tests ANTES de implementar funcionalidad
+- ✅ Un test debe verificar una sola cosa
+- ✅ Tests deben ser independientes (no depender de otros)
+- ✅ Usar nombres descriptivos: `describe('useAuth', () => { it('should logout user and clear tokens', ...) })`
+- ✅ Mantener cobertura mínima del 80% para código crítico
+- ✅ Mockear dependencias externas (API, SecureStore, etc.)
+
+### Tipos de Tests Requeridos
+
+1. **Unit Tests**: Componentes, hooks, utilities
+2. **Integration Tests**: Flujos completos (login → browse → booking)
+3. **E2E Tests**: Flujos críticos de usuario (usar Detox o similar)
+
+### Testing de Hooks
+
+```typescript
+// ✅ BUENO: Testear comportamiento, no implementación
+it('should login user and navigate to browse', async () => {
+  const { result } = renderHook(() => useAuth());
+  await act(async () => {
+    await result.current.login({ email: 'test@test.com', password: 'pass' });
+  });
+  expect(result.current.isAuthenticated).toBe(true);
+});
+
+// ❌ MALO: Testear implementación interna
+it('should call apiClient.post', ...);
+```
+
+---
+
+## 📝 TypeScript
+
+> **📚 Referencia especializada:** Consulta `.cursor/agents/typescript-pro.md` para patrones avanzados de tipos, type guards, generics, y optimización de builds.
+
+### Configuración Strict
+
+- ✅ `strict: true` siempre activado
+- ✅ Usar tipos explícitos, evitar `any`
+- ✅ Usar `unknown` para valores desconocidos
+- ✅ Definir interfaces para todas las estructuras de datos
+- ✅ Usar tipos unión para valores específicos: `type ApiMode = 'mock' | 'live'`
+
+### Reglas de Tipado
+
+```typescript
+// ✅ BUENO: Tipos explícitos
+interface User {
+  id: string;
+  email: string;
+  name: string;
+}
+
+const getUser = async (id: string): Promise<User> => { ... };
+
+// ❌ MALO: any implícito
+const getUser = async (id) => { ... };
+```
+
+### Tipos de Servicios
+
+- ✅ Definir tipos para requests y responses
+- ✅ Usar tipos genéricos para reutilización
+- ✅ Crear tipos compartidos en `services/types.ts`
+- ✅ Usar `ApiResponse<T>` para respuestas de API
+
+---
+
+## ⚛️ React Native / Expo
+
+> **📚 Referencias especializadas:**
+>
+> - `.cursor/agents/react-specialist.md` - Patrones avanzados de React, hooks, performance
+> - `.cursor/agents/mobile-developer.md` - Desarrollo móvil cross-platform, optimización, native modules
+
+### Componentes
+
+- ✅ Usar Functional Components con hooks
+- ✅ Evitar re-renders innecesarios con `React.memo` cuando sea apropiado
+- ✅ Usar `useMemo` y `useCallback` para optimizaciones (solo cuando necesario)
+- ✅ Extraer lógica compleja a custom hooks
+- ✅ Mantener componentes pequeños (< 200 líneas)
+
+### Navegación (Expo Router)
+
+- ✅ Usar file-based routing de Expo Router
+- ✅ Grupos de rutas con `(auth)` y `(tabs)` para organización
+- ✅ Usar `router.push()` para navegación programática
+- ✅ Validar parámetros de ruta con TypeScript
+
+### Performance
+
+- ✅ Usar `FlatList` en lugar de `ScrollView` para listas largas
+- ✅ Implementar `keyExtractor` y `getItemLayout` en listas
+- ✅ Lazy loading de imágenes con `expo-image`
+- ✅ Usar `react-native-reanimated` para animaciones (worklet)
+- ✅ Evitar cálculos pesados en render, usar `useMemo`
+
+### Estado y Data Fetching
+
+- ✅ Usar TanStack Query para todas las operaciones async
+- ✅ Configurar `staleTime` y `cacheTime` apropiadamente
+- ✅ Usar `useQuery` para datos de lectura
+- ✅ Usar `useMutation` para operaciones de escritura
+- ✅ Invalidar queries después de mutaciones
+
+```typescript
+// ✅ BUENO: Usar React Query
+const { data, isLoading } = useQuery({
+  queryKey: ["vehicles", filters],
+  queryFn: () => getVehicles(filters),
+  staleTime: 5 * 60 * 1000, // 5 minutos
+});
+
+// ❌ MALO: useState + useEffect para fetching
+const [vehicles, setVehicles] = useState([]);
+useEffect(() => {
+  fetchVehicles().then(setVehicles);
+}, []);
+```
+
+---
+
+## 🎨 Estilos y UI
+
+> **📚 Referencia especializada:** Consulta `.cursor/agents/ux-researcher.md` para metodologías de investigación UX, pruebas de usabilidad, análisis de comportamiento, accesibilidad avanzada, y mejores prácticas de diseño centrado en el usuario.
+
+### Design Tokens
+
+- ✅ Usar tokens de diseño centralizados (`theme/tokens.ts`)
+- ✅ No hardcodear colores, spacing, etc.
+- ✅ Mantener consistencia visual
+- ✅ Soporte para dark mode (usar `useColorScheme`)
+
+### Componentes Reutilizables
+
+- ✅ Crear componentes genéricos y reutilizables
+- ✅ Usar props para variaciones, no duplicar componentes
+- ✅ Documentar props con TypeScript y JSDoc
+
+### Accesibilidad
+
+- ✅ Agregar `accessibilityLabel` a elementos interactivos
+- ✅ Usar `accessibilityRole` apropiado
+- ✅ Soporte para lectores de pantalla
+- ✅ Contraste adecuado de colores (WCAG AA mínimo)
+
+---
+
+## 🔄 Manejo de Errores
+
+### Error Boundaries
+
+- ✅ Implementar error boundaries para capturar errores de React
+- ✅ Mostrar UI de fallback amigable
+- ✅ Loguear errores para debugging
+
+### API Errors
+
+- ✅ Usar tipos estructurados para errores (`ApiError`)
+- ✅ Manejar errores específicos (401, 403, 404, 500)
+- ✅ Mostrar mensajes de error amigables al usuario
+- ✅ Implementar retry logic para errores transitorios
+
+```typescript
+// ✅ BUENO: Manejo estructurado de errores
+try {
+  const result = await apiClient.get("/vehicles");
+  if (!result.success) {
+    showToast(result.error.message);
+    return;
+  }
+  // usar result.data
+} catch (error) {
+  showToast("Error de conexión. Intenta de nuevo.");
+}
+```
+
+---
+
+## 📦 Gestión de Dependencias
+
+### Agregar Nuevas Dependencias
+
+- ✅ Verificar compatibilidad con React Native/Expo
+- ✅ Revisar bundle size (usar `expo-doctor`)
+- ✅ Preferir librerías mantenidas activamente
+- ✅ Verificar licencias compatibles
+- ✅ Documentar razón de la dependencia
+
+### Versionado
+
+- ✅ Usar versiones exactas para dependencias críticas
+- ✅ Actualizar dependencias regularmente
+- ✅ Probar actualizaciones en branch separado
+- ✅ Revisar changelog antes de actualizar
+
+---
+
+## 🚀 Performance y Optimización
+
+> **📚 Referencias especializadas:**
+>
+> - `.cursor/agents/mobile-developer.md` - Optimización móvil, profiling, native performance
+> - `.cursor/agents/react-specialist.md` - Optimización de React, memoization, code splitting
+
+### Bundle Size
+
+- ✅ Monitorear tamaño del bundle
+- ✅ Usar tree-shaking (imports específicos)
+- ✅ Lazy load de pantallas no críticas
+- ✅ Optimizar imágenes y assets
+
+### Memory Management
+
+- ✅ Limpiar subscriptions y listeners en `useEffect` cleanup
+- ✅ Evitar memory leaks con referencias a objetos grandes
+- ✅ Usar `useRef` para valores que no necesitan re-render
+
+### Network
+
+- ✅ Implementar caché apropiado con React Query
+- ✅ Usar debounce/throttle para búsquedas
+- ✅ Implementar paginación para listas grandes
+- ✅ Prefetch datos que probablemente se necesiten
+
+---
+
+## 📚 Convenciones de Código
+
+### Naming
+
+- ✅ Componentes: PascalCase (`UserProfile.tsx`)
+- ✅ Hooks: camelCase con prefijo `use` (`useAuth.ts`)
+- ✅ Utilidades: camelCase (`formatDate.ts`)
+- ✅ Constantes: UPPER_SNAKE_CASE (`API_BASE_URL`)
+- ✅ Tipos/Interfaces: PascalCase (`User`, `ApiResponse`)
+
+### Imports
+
+- ✅ Orden: React → librerías externas → internas → relativos
+- ✅ Usar absolute imports cuando sea posible (`@/components`)
+- ✅ Agrupar imports relacionados
+
+```typescript
+// ✅ BUENO: Imports organizados
+import { useEffect } from "react";
+import { router } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/atoms";
+import { useAuth } from "../hooks";
+```
+
+### Comentarios y Documentación
+
+- ✅ Documentar funciones complejas con JSDoc
+- ✅ Usar comentarios para explicar "por qué", no "qué"
+- ✅ Mantener comentarios actualizados
+- ✅ Eliminar código comentado
+
+```typescript
+// ✅ BUENO: Documentación útil
+/**
+ * Refresca el access token usando el refresh token almacenado.
+ * Previene múltiples llamadas simultáneas de refresh.
+ */
+private async refreshAccessToken(refreshToken: string): Promise<string | null> {
+  // ...
+}
+```
+
+### Git y Commits
+
+- ✅ Commits atómicos y descriptivos
+- ✅ Usar Conventional Commits: `feat:`, `fix:`, `refactor:`, `test:`, etc.
+- ✅ Branch naming: `feature/`, `fix/`, `refactor/`
+- ✅ PRs pequeños y enfocados
+
+---
+
+## 🧹 Code Quality
+
+> **📚 Referencia especializada:** Consulta `.cursor/agents/code-reviewer.md` para checklist completo de code review, identificación de code smells, y mejores prácticas de calidad.
+
+### Linting y Formatting
+
+- ✅ Usar ESLint con reglas de React Native
+- ✅ Usar Prettier para formateo consistente
+- ✅ Configurar pre-commit hooks (Husky)
+- ✅ Integrar en CI/CD
+
+### Code Review Checklist
+
+- ✅ ¿El código sigue los patrones del proyecto?
+- ✅ ¿Hay tests para nueva funcionalidad?
+- ✅ ¿Se manejan errores apropiadamente?
+- ✅ ¿Es accesible?
+- ✅ ¿Hay performance issues?
+- ✅ ¿La seguridad está considerada?
+- ✅ ¿Los tipos están bien definidos?
+
+### Refactoring
+
+- ✅ Refactorizar cuando el código se duplica (DRY)
+- ✅ Mantener funciones pequeñas y enfocadas
+- ✅ Extraer constantes mágicas a constantes nombradas
+- ✅ Mejorar nombres de variables/funciones cuando sea necesario
+
+---
+
+## 🏗️ Estructura de Archivos
+
+### Organización
+
+```
+app/              # Pantallas (Expo Router)
+components/       # Componentes reutilizables (Atomic Design)
+hooks/            # Custom hooks
+services/         # Lógica de negocio y API
+  ├── modes/      # Implementaciones (mock/rest)
+providers/        # Context providers
+utils/            # Utilidades puras
+config/           # Configuración
+theme/            # Design tokens
+```
+
+### Reglas
+
+- ✅ Un componente por archivo
+- ✅ Archivos relacionados cerca entre sí
+- ✅ Usar `index.ts` para exports públicos
+- ✅ Mantener estructura plana cuando sea posible (evitar nesting excesivo)
+
+---
+
+## 🌐 Internacionalización (i18n)
+
+### Preparación para i18n
+
+- ✅ No hardcodear strings de texto en componentes
+- ✅ Preparar estructura para traducciones
+- ✅ Usar keys descriptivos: `auth.login.title` no `loginTitle`
+
+---
+
+## 📱 Expo Específico
+
+### Configuración
+
+- ✅ Mantener `app.config.ts` actualizado
+- ✅ Configurar deep linking apropiadamente
+- ✅ Configurar esquemas de URL
+- ✅ Validar variables de entorno
+
+### Build y Deploy
+
+- ✅ Usar EAS Build para builds nativos
+- ✅ Configurar diferentes environments (dev, stage, prod)
+- ✅ Validar configuración antes de deploy
+- ✅ Usar versionado semántico
+
+---
+
+## 🔍 Debugging
+
+### Herramientas
+
+- ✅ Usar React Native Debugger
+- ✅ Usar Flipper para debugging avanzado
+- ✅ Logs estructurados en desarrollo
+- ✅ No loguear información sensible
+
+### Logging
+
+```typescript
+// ✅ BUENO: Logs condicionales
+if (__DEV__) {
+  console.log("🔑 AccessToken updated:", token ? "set" : "cleared");
+}
+
+// ❌ MALO: Logs en producción
+console.log("User token:", token);
+```
+
+---
+
+## ✅ Checklist Pre-Deploy
+
+Antes de hacer deploy a producción:
+
+- [ ] Todos los tests pasan
+- [ ] No hay warnings de TypeScript
+- [ ] No hay console.logs de debug
+- [ ] Variables de entorno configuradas correctamente
+- [ ] Bundle size optimizado
+- [ ] Performance testing realizado
+- [ ] Security audit realizado
+- [ ] Accesibilidad verificada
+- [ ] Documentación actualizada
+
+---
+
+## 🧪 Investigación UX y Usabilidad
+
+> **📚 Referencia especializada:** Consulta `.cursor/agents/ux-researcher.md` para metodologías completas de investigación UX, diseño de pruebas de usabilidad, análisis de comportamiento, creación de personas, journey mapping, y validación de diseños.
+
+### Principios de UX Research
+
+- ✅ Investigar antes de diseñar (discovery research)
+- ✅ Validar diseños con usuarios reales
+- ✅ Medir comportamiento real, no solo opiniones
+- ✅ Combinar métodos cualitativos y cuantitativos
+- ✅ Iterar basándose en datos, no suposiciones
+
+### Métricas Clave para Monitorear
+
+**Engagement:**
+- Daily/Monthly Active Users (DAU/MAU)
+- Sesiones por usuario
+- Tiempo en app
+- Retención (D1, D7, D30)
+
+**Conversión:**
+- Búsqueda → Ver detalles
+- Ver detalles → Iniciar reserva
+- Iniciar reserva → Completar pago
+- Tasa de éxito de pago
+
+**Fricción:**
+- Puntos de abandono en funnel
+- Tasa de error
+- Tiempo para completar tareas clave
+- Tickets de soporte
+
+### Pruebas de Usabilidad
+
+- ✅ Probar flujos críticos regularmente (login, booking, pago)
+- ✅ Reclutar 5-8 usuarios por ronda de testing
+- ✅ Observar comportamiento, no solo preguntar
+- ✅ Documentar pain points y oportunidades
+- ✅ Priorizar mejoras por impacto y esfuerzo
+
+### Accesibilidad
+
+- ✅ Cumplir con WCAG 2.1 AA como mínimo
+- ✅ Probar con lectores de pantalla (VoiceOver/TalkBack)
+- ✅ Verificar navegación por teclado
+- ✅ Validar contraste de colores
+- ✅ Incluir usuarios con discapacidades en pruebas
+
+### Feedback del Usuario
+
+- ✅ Implementar encuestas in-app estratégicamente
+- ✅ Analizar reviews de app stores
+- ✅ Monitorear tickets de soporte
+- ✅ Realizar entrevistas de usuario periódicas
+- ✅ Analizar sesiones grabadas (con consentimiento)
+
+---
+
+## 📖 Recursos y Referencias
+
+- [React Native Best Practices](https://reactnative.dev/docs/performance)
+- [Expo Documentation](https://docs.expo.dev/)
+- [TanStack Query Docs](https://tanstack.com/query/latest)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [OWASP Mobile Security](https://owasp.org/www-project-mobile-security/)
+
+---
+
+## 🎯 Principios Fundamentales
+
+1. **Clarity over Cleverness**: Código claro y legible siempre
+2. **Fail Fast**: Validar y fallar temprano
+3. **Security First**: Seguridad desde el diseño
+4. **Test Everything**: Tests para código crítico
+5. **User Experience**: Performance y UX son prioritarios
+6. **Maintainability**: Código mantenible a largo plazo
+
+---
+
+_Última actualización: Generado automáticamente para el proyecto_

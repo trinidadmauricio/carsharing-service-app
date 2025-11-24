@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Ride - CarShare SV</title>
+    <link rel="stylesheet" href="search_styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Dashboard/Home Screen -->
+    <div id="dashboard-screen" class="screen active">
+        <header class="dashboard-header">
+            <div class="user-greeting">
+                <div class="avatar">
+                    <div class="avatar-placeholder">A</div>
+                </div>
+                <div class="greeting-text">
+                    <h2>Good morning, Alex!</h2>
+                    <p>Ready for your next adventure?</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="quick-search-card">
+            <h3>Find a vehicle nearby</h3>
+            <div class="search-form">
+                <div class="location-input">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" id="location-search" placeholder="Where do you need a car?" value="Downtown San José">
+                </div>
+                <div class="datetime-inputs">
+                    <div class="datetime-group">
+                        <label>Pickup</label>
+                        <input type="datetime-local" id="pickup-time" value="2024-01-25T14:00">
+                    </div>
+                    <div class="datetime-group">
+                        <label>Return</label>
+                        <input type="datetime-local" id="return-time" value="2024-01-25T18:00">
+                    </div>
+                </div>
+                <button class="search-btn" onclick="showSearchResults()">
+                    <i class="fas fa-search"></i>
+                    Search Vehicles
+                </button>
+            </div>
+        </div>
+
+        <div class="recent-activity">
+            <h3>Recent Trips</h3>
+            <div class="trip-card">
+                <div class="trip-info">
+                    <div class="car-thumbnail">
+                        <div class="vehicle-thumb economy">
+                            <svg class="car-svg" viewBox="0 0 100 60" fill="currentColor">
+                                <path d="M15 40 Q10 35 15 30 L25 25 Q30 20 40 20 L60 20 Q70 20 75 25 L85 30 Q90 35 85 40 L80 45 Q75 50 65 50 L35 50 Q25 50 20 45 Z"/>
+                                <circle cx="25" cy="45" r="8" fill="currentColor" opacity="0.7"/>
+                                <circle cx="75" cy="45" r="8" fill="currentColor" opacity="0.7"/>
+                                <rect x="35" y="25" width="30" height="15" rx="2" fill="currentColor" opacity="0.5"/>
+                            </svg>
+                            <span class="vehicle-type">Honda Civic</span>
+                        </div>
+                    </div>
+                    <div class="trip-details">
+                        <h4>Honda Civic 2022</h4>
+                        <p>Jan 20, 2024 • 3 hours</p>
+                        <span class="trip-status completed">Completed</span>
+                    </div>
+                </div>
+                <div class="trip-rating">
+                    <div class="stars">★★★★★</div>
+                    <span>$24.50</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <button class="action-card">
+                <i class="fas fa-clock"></i>
+                <span>Book for Later</span>
+            </button>
+            <button class="action-card">
+                <i class="fas fa-heart"></i>
+                <span>Favorites</span>
+            </button>
+            <button class="action-card">
+                <i class="fas fa-history"></i>
+                <span>Trip History</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Results Screen -->
+    <div id="search-results-screen" class="screen">
+        <header class="search-header">
+            <button class="back-btn" onclick="showDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="search-info">
+                <h2>Available Vehicles</h2>
+                <p>Downtown San José • Jan 25, 2:00 PM - 6:00 PM</p>
+            </div>
+            <button class="view-toggle" onclick="toggleView()">
+                <i class="fas fa-map" id="view-icon"></i>
+            </button>
+        </header>
+
+        <div class="filters-bar">
+            <div class="filters-scroll">
+                <button class="filter-chip active" data-filter="all">All</button>
+                <button class="filter-chip" data-filter="economy">Economy</button>
+                <button class="filter-chip" data-filter="luxury">Luxury</button>
+                <button class="filter-chip" data-filter="suv">SUV</button>
+                <button class="filter-chip" data-filter="electric">Electric</button>
+            </div>
+            <button class="more-filters-btn" onclick="showFilters()">
+                <i class="fas fa-sliders-h"></i>
+            </button>
+        </div>
+
+        <div class="search-results-container">
+            <!-- List View -->
+            <div id="list-view" class="results-list active">
+                <div class="vehicle-card" data-category="economy" onclick="showVehicleDetail(1)">
+                    <div class="vehicle-image">
+                        <div class="vehicle-thumb economy">
+                            <svg class="car-svg" viewBox="0 0 100 60" fill="currentColor">
+                                <path d="M15 40 Q10 35 15 30 L25 25 Q30 20 40 20 L60 20 Q70 20 75 25 L85 30 Q90 35 85 40 L80 45 Q75 50 65 50 L35 50 Q25 50 20 45 Z"/>
+                                <circle cx="25" cy="45" r="8" fill="currentColor" opacity="0.7"/>
+                                <circle cx="75" cy="45" r="8" fill="currentColor" opacity="0.7"/>
+                                <rect x="35" y="25" width="30" height="15" rx="2" fill="currentColor" opacity="0.5"/>
+                            </svg>
+                            <span class="vehicle-type">Honda Civic</span>
+                        </div>
+                        <div class="distance-badge">0.2 mi</div>
+                        <button class="favorite-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="vehicle-info">
+                        <div class="vehicle-header">
+                            <h3>Honda Civic 2022</h3>
+                            <div class="rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-count">(24)</span>
+                            </div>
+                        </div>
+                        <div class="vehicle-features">
+                            <span class="feature"><i class="fas fa-users"></i> 5 seats</span>
+                            <span class="feature"><i class="fas fa-gas-pump"></i> Gasoline</span>
+                            <span class="feature"><i class="fas fa-wifi"></i> WiFi</span>
+                        </div>
+                        <div class="host-info">
+                            <div class="host-avatar-placeholder">JD</div>
+                            <span>Maria S.</span>
+                            <span class="superhost">Superhost</span>
+                        </div>
+                        <div class="pricing">
+                            <span class="price">$8.50<small>/hour</small></span>
+                            <span class="total">$34.00 total</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vehicle-card" data-category="luxury" onclick="showVehicleDetail(2)">
+                    <div class="vehicle-image">
+                        <div class="vehicle-thumb luxury">
+                            <svg class="car-svg" viewBox="0 0 100 60" fill="currentColor">
+                                <path d="M12 42 Q8 37 12 32 L22 27 Q27 22 37 22 L63 22 Q73 22 78 27 L88 32 Q92 37 88 42 L83 47 Q78 52 68 52 L32 52 Q22 52 17 47 Z"/>
+                                <circle cx="22" cy="47" r="9" fill="currentColor" opacity="0.7"/>
+                                <circle cx="78" cy="47" r="9" fill="currentColor" opacity="0.7"/>
+                                <rect x="32" y="27" width="36" height="15" rx="3" fill="currentColor" opacity="0.5"/>
+                                <rect x="40" y="30" width="20" height="8" rx="1" fill="currentColor" opacity="0.3"/>
+                            </svg>
+                            <span class="vehicle-type">BMW 3 Series</span>
+                        </div>
+                        <div class="distance-badge">0.4 mi</div>
+                        <button class="favorite-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="vehicle-info">
+                        <div class="vehicle-header">
+                            <h3>BMW 3 Series 2023</h3>
+                            <div class="rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-count">(18)</span>
+                            </div>
+                        </div>
+                        <div class="vehicle-features">
+                            <span class="feature"><i class="fas fa-users"></i> 5 seats</span>
+                            <span class="feature"><i class="fas fa-gas-pump"></i> Premium</span>
+                            <span class="feature"><i class="fas fa-snowflake"></i> AC</span>
+                        </div>
+                        <div class="host-info">
+                            <div class="host-avatar-placeholder">MR</div>
+                            <span>David K.</span>
+                            <span class="superhost">Superhost</span>
+                        </div>
+                        <div class="pricing">
+                            <span class="price">$15.00<small>/hour</small></span>
+                            <span class="total">$60.00 total</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vehicle-card" data-category="electric" onclick="showVehicleDetail(3)">
+                    <div class="vehicle-image">
+                        <div class="vehicle-thumb electric">
+                            <svg class="car-svg" viewBox="0 0 100 60" fill="currentColor">
+                                <path d="M14 41 Q9 36 14 31 L24 26 Q29 21 39 21 L61 21 Q71 21 76 26 L86 31 Q91 36 86 41 L81 46 Q76 51 66 51 L34 51 Q24 51 19 46 Z"/>
+                                <circle cx="24" cy="46" r="8" fill="currentColor" opacity="0.7"/>
+                                <circle cx="76" cy="46" r="8" fill="currentColor" opacity="0.7"/>
+                                <rect x="34" y="26" width="32" height="15" rx="2" fill="currentColor" opacity="0.5"/>
+                                <polygon points="50,15 53,20 47,20" fill="currentColor" opacity="0.8"/>
+                            </svg>
+                            <span class="vehicle-type">Tesla Model 3</span>
+                        </div>
+                        <div class="distance-badge">0.6 mi</div>
+                        <div class="eco-badge">ECO</div>
+                        <button class="favorite-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="vehicle-info">
+                        <div class="vehicle-header">
+                            <h3>Tesla Model 3 2023</h3>
+                            <div class="rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-count">(31)</span>
+                            </div>
+                        </div>
+                        <div class="vehicle-features">
+                            <span class="feature"><i class="fas fa-users"></i> 5 seats</span>
+                            <span class="feature"><i class="fas fa-bolt"></i> Electric</span>
+                            <span class="feature"><i class="fas fa-robot"></i> Autopilot</span>
+                        </div>
+                        <div class="host-info">
+                            <div class="host-avatar-placeholder">AL</div>
+                            <span>Sarah L.</span>
+                            <span class="superhost">Superhost</span>
+                        </div>
+                        <div class="pricing">
+                            <span class="price">$12.00<small>/hour</small></span>
+                            <span class="total">$48.00 total</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vehicle-card" data-category="suv" onclick="showVehicleDetail(4)">
+                    <div class="vehicle-image">
+                        <div class="vehicle-thumb suv">
+                            <svg class="car-svg" viewBox="0 0 100 60" fill="currentColor">
+                                <path d="M10 45 Q6 40 10 35 L20 30 Q25 25 35 25 L65 25 Q75 25 80 30 L90 35 Q94 40 90 45 L85 50 Q80 55 70 55 L30 55 Q20 55 15 50 Z"/>
+                                <circle cx="20" cy="50" r="10" fill="currentColor" opacity="0.7"/>
+                                <circle cx="80" cy="50" r="10" fill="currentColor" opacity="0.7"/>
+                                <rect x="30" y="30" width="40" height="15" rx="2" fill="currentColor" opacity="0.5"/>
+                                <rect x="15" y="40" width="70" height="5" rx="2" fill="currentColor" opacity="0.3"/>
+                            </svg>
+                            <span class="vehicle-type">Toyota RAV4</span>
+                        </div>
+                        <div class="distance-badge">0.8 mi</div>
+                        <button class="favorite-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="vehicle-info">
+                        <div class="vehicle-header">
+                            <h3>Toyota RAV4 2022</h3>
+                            <div class="rating">
+                                <span class="stars">★★★★☆</span>
+                                <span class="rating-count">(12)</span>
+                            </div>
+                        </div>
+                        <div class="vehicle-features">
+                            <span class="feature"><i class="fas fa-users"></i> 7 seats</span>
+                            <span class="feature"><i class="fas fa-mountain"></i> AWD</span>
+                            <span class="feature"><i class="fas fa-suitcase"></i> Large trunk</span>
+                        </div>
+                        <div class="host-info">
+                            <div class="host-avatar-placeholder">CS</div>
+                            <span>Carlos M.</span>
+                            <span class="verified">Verified</span>
+                        </div>
+                        <div class="pricing">
+                            <span class="price">$11.00<small>/hour</small></span>
+                            <span class="total">$44.00 total</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map View -->
+            <div id="map-view" class="map-container">
+                <div class="map-placeholder">
+                    <div class="map-pin" style="top: 30%; left: 25%;" data-vehicle="1">
+                        <span class="pin-price">$8.50</span>
+                    </div>
+                    <div class="map-pin" style="top: 45%; left: 40%;" data-vehicle="2">
+                        <span class="pin-price">$15.00</span>
+                    </div>
+                    <div class="map-pin" style="top: 60%; left: 60%;" data-vehicle="3">
+                        <span class="pin-price">$12.00</span>
+                    </div>
+                    <div class="map-pin" style="top: 35%; left: 70%;" data-vehicle="4">
+                        <span class="pin-price">$11.00</span>
+                    </div>
+                    <div class="user-location">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                </div>
+                <div class="map-card-preview" id="map-preview"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Detail Screen -->
+    <div id="vehicle-detail-screen" class="screen">
+        <div class="detail-header">
+            <button class="back-btn" onclick="showSearchResults()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="detail-actions">
+                <button class="share-btn">
+                    <i class="fas fa-share"></i>
+                </button>
+                <button class="favorite-btn">
+                    <i class="far fa-heart"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="vehicle-gallery">
+            <div class="main-image">
+                <div id="detail-main-image" class="main-vehicle-image">
+                    <svg class="car-svg" viewBox="0 0 150 90" fill="currentColor">
+                        <path d="M20 60 Q12 50 20 40 L35 30 Q45 20 60 20 L90 20 Q105 20 115 30 L130 40 Q138 50 130 60 L120 70 Q110 80 90 80 L60 80 Q40 80 30 70 Z"/>
+                        <circle cx="40" cy="70" r="12" fill="currentColor" opacity="0.7"/>
+                        <circle cx="110" cy="70" r="12" fill="currentColor" opacity="0.7"/>
+                        <rect x="50" y="35" width="50" height="25" rx="3" fill="currentColor" opacity="0.5"/>
+                        <rect x="60" y="40" width="30" height="15" rx="2" fill="currentColor" opacity="0.3"/>
+                    </svg>
+                    <div class="vehicle-label">Honda Civic 2022<br><small>High-resolution photos coming soon</small></div>
+                </div>
+            </div>
+            <div class="thumbnail-strip">
+                <div class="gallery-thumb exterior active">
+                    <div class="thumb-placeholder">
+                        <i class="fas fa-car"></i>
+                        <span class="thumb-label">Exterior</span>
+                    </div>
+                </div>
+                <div class="gallery-thumb interior">
+                    <div class="thumb-placeholder">
+                        <i class="fas fa-couch"></i>
+                        <span class="thumb-label">Interior</span>
+                    </div>
+                </div>
+                <div class="gallery-thumb dashboard">
+                    <div class="thumb-placeholder">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="thumb-label">Dashboard</span>
+                    </div>
+                </div>
+                <div class="gallery-thumb engine">
+                    <div class="thumb-placeholder">
+                        <i class="fas fa-cog"></i>
+                        <span class="thumb-label">Engine</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="vehicle-detail-info">
+            <div class="detail-header-info">
+                <h1 id="detail-title">Honda Civic 2022</h1>
+                <div class="rating-detailed">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-number">4.9</span>
+                    <span class="rating-count">(24 reviews)</span>
+                </div>
+            </div>
+
+            <div class="host-profile">
+                <div class="host-avatar-placeholder">JD</div>
+                <div class="host-details">
+                    <h3>Maria S.</h3>
+                    <p>Superhost • Joined in 2021</p>
+                    <div class="host-stats">
+                        <span>98% response rate</span>
+                        <span>156 trips</span>
+                    </div>
+                </div>
+                <button class="contact-host-btn">
+                    <i class="fas fa-comment"></i>
+                </button>
+            </div>
+
+            <div class="vehicle-specs">
+                <h3>Vehicle Details</h3>
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <i class="fas fa-users"></i>
+                        <span>5 seats</span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-suitcase"></i>
+                        <span>4 bags</span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>Gasoline</span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-cogs"></i>
+                        <span>Automatic</span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-road"></i>
+                        <span>45,230 miles</span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>2022 model</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-included">
+                <h3>What's Included</h3>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Bluetooth connectivity</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Backup camera</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>USB charging ports</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Air conditioning</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Keyless entry</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>24/7 roadside assistance</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="location-info">
+                <h3>Pickup Location</h3>
+                <div class="location-card">
+                    <div class="location-map">
+                        <div class="mini-map">
+                            <div class="mini-pin"></div>
+                        </div>
+                    </div>
+                    <div class="location-details">
+                        <h4>Downtown Parking Garage</h4>
+                        <p>123 S 1st Street, San José, CA 95113</p>
+                        <p class="distance">0.2 miles from you</p>
+                    </div>
+                    <button class="directions-btn">
+                        <i class="fas fa-directions"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="reviews-section">
+                <div class="reviews-header">
+                    <h3>Reviews (24)</h3>
+                    <button class="see-all-reviews">See all</button>
+                </div>
+                <div class="review-item">
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar-placeholder">MR</div>
+                        <div>
+                            <h4>James R.</h4>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <p>"Great car, very clean and reliable. Maria was responsive and helpful. Would definitely rent again!"</p>
+                    <span class="review-date">2 days ago</span>
+                </div>
+                <div class="review-item">
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar-placeholder">AL</div>
+                        <div>
+                            <h4>Lisa M.</h4>
+                            <div class="stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <p>"Perfect for my weekend trip. Excellent fuel economy and very comfortable seats."</p>
+                    <span class="review-date">1 week ago</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="booking-footer">
+            <div class="pricing-summary">
+                <div class="price-breakdown">
+                    <span class="total-price">$34.00</span>
+                    <span class="price-details">$8.50/hour • 4 hours</span>
+                </div>
+            </div>
+            <button class="book-now-btn" onclick="showBookingSummary()">
+                Book Now
+            </button>
+        </div>
+    </div>
+
+    <!-- Booking Summary Screen -->
+    <div id="booking-summary-screen" class="screen">
+        <header class="booking-header">
+            <button class="back-btn" onclick="showVehicleDetail(1)">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Booking Summary</h2>
+        </header>
+
+        <div class="booking-content">
+            <div class="vehicle-summary-card">
+                <div class="vehicle-thumb economy">
+                    <svg class="car-svg" viewBox="0 0 80 50" fill="currentColor">
+                        <path d="M12 32 Q8 27 12 22 L18 18 Q22 15 30 15 L50 15 Q58 15 62 18 L68 22 Q72 27 68 32 L65 37 Q62 42 54 42 L26 42 Q18 42 15 37 Z"/>
+                        <circle cx="18" cy="37" r="6" fill="currentColor" opacity="0.7"/>
+                        <circle cx="62" cy="37" r="6" fill="currentColor" opacity="0.7"/>
+                        <rect x="26" y="20" width="28" height="12" rx="2" fill="currentColor" opacity="0.5"/>
+                    </svg>
+                    <span class="vehicle-type">Honda Civic</span>
+                </div>
+                <div class="summary-info">
+                    <h3>Honda Civic 2022</h3>
+                    <p>Maria S. • Superhost</p>
+                    <div class="rating">
+                        <span class="stars">★★★★★</span>
+                        <span>(24)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="trip-details-card">
+                <h3>Trip Details</h3>
+                <div class="detail-row">
+                    <span class="label">Pickup</span>
+                    <span class="value">Jan 25, 2:00 PM</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Return</span>
+                    <span class="value">Jan 25, 6:00 PM</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Duration</span>
+                    <span class="value">4 hours</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Location</span>
+                    <span class="value">Downtown Parking Garage</span>
+                </div>
+            </div>
+
+            <div class="price-breakdown-card">
+                <h3>Price Breakdown</h3>
+                <div class="price-row">
+                    <span>$8.50 × 4 hours</span>
+                    <span>$34.00</span>
+                </div>
+                <div class="price-row">
+                    <span>Service fee</span>
+                    <span>$2.50</span>
+                </div>
+                <div class="price-row">
+                    <span>Insurance</span>
+                    <span>$4.00</span>
+                </div>
+                <div class="price-row total">
+                    <span>Total</span>
+                    <span>$40.50</span>
+                </div>
+            </div>
+
+            <div class="payment-method-card">
+                <h3>Payment Method</h3>
+                <div class="payment-option selected">
+                    <div class="payment-info">
+                        <i class="fab fa-cc-visa"></i>
+                        <span>•••• 4242</span>
+                    </div>
+                    <button class="change-payment">Change</button>
+                </div>
+            </div>
+
+            <div class="cancellation-policy">
+                <h3>Cancellation Policy</h3>
+                <p>Free cancellation until 1 hour before pickup time. After that, you'll be charged 50% of the trip cost.</p>
+            </div>
+        </div>
+
+        <div class="booking-actions">
+            <button class="confirm-booking-btn" onclick="showBookingConfirmation()">
+                Confirm & Pay $40.50
+            </button>
+            <p class="terms-text">By confirming, you agree to our Terms of Service and Privacy Policy</p>
+        </div>
+    </div>
+
+    <!-- Booking Confirmation Screen -->
+    <div id="booking-confirmation-screen" class="screen">
+        <div class="booking-content">
+            <div class="processing-animation">
+                <div class="processing-spinner">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <h2>Processing Payment...</h2>
+                <p>Please wait while we confirm your booking</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Success Screen -->
+    <div id="booking-success-screen" class="screen">
+        <div class="booking-content">
+            <div class="success-animation">
+                <div class="success-checkmark">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+
+            <h1>Booking Confirmed!</h1>
+            <p>Your trip is all set. You'll receive a confirmation email shortly.</p>
+
+            <div class="booking-details-card">
+                <div class="booking-header-info">
+                    <div class="vehicle-thumb economy">
+                    <svg class="car-svg" viewBox="0 0 80 50" fill="currentColor">
+                        <path d="M12 32 Q8 27 12 22 L18 18 Q22 15 30 15 L50 15 Q58 15 62 18 L68 22 Q72 27 68 32 L65 37 Q62 42 54 42 L26 42 Q18 42 15 37 Z"/>
+                        <circle cx="18" cy="37" r="6" fill="currentColor" opacity="0.7"/>
+                        <circle cx="62" cy="37" r="6" fill="currentColor" opacity="0.7"/>
+                        <rect x="26" y="20" width="28" height="12" rx="2" fill="currentColor" opacity="0.5"/>
+                    </svg>
+                    <span class="vehicle-type">Honda Civic</span>
+                </div>
+                    <div>
+                        <h3>Honda Civic 2022</h3>
+                        <p>Maria S. • Superhost</p>
+                        <span class="booking-id">Booking #HC2024-001234</span>
+                    </div>
+                </div>
+
+                <div class="trip-summary">
+                    <div class="summary-row">
+                        <span class="label">Pickup</span>
+                        <span class="value">
+                            <strong>Jan 25, 2:00 PM</strong><br>
+                            Downtown Parking Garage<br>
+                            123 Main St, San José
+                        </span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="label">Return</span>
+                        <span class="value">
+                            <strong>Jan 25, 6:00 PM</strong><br>
+                            Same location
+                        </span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="label">Total Paid</span>
+                        <span class="value total-amount">$40.50</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="next-steps-card">
+                <h3>What's Next?</h3>
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Before Your Trip</h4>
+                        <p>Check your email for pickup instructions and host contact info</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>At Pickup Time</h4>
+                        <p>Meet your host or use the app to unlock the car</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>During Your Trip</h4>
+                        <p>Drive safely and return the car with the same fuel level</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-actions">
+                <button class="btn-primary" onclick="viewTripDetails()">
+                    View Trip Details
+                </button>
+                <button class="btn-secondary" onclick="backToSearch()">
+                    Book Another Car
+                </button>
+                <button class="btn-text" onclick="contactHost()">
+                    <i class="fas fa-message"></i>
+                    Contact Host
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Filters Modal -->
+    <div id="filters-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Filters</h3>
+                <button class="close-modal" onclick="hideFilters()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="filter-section">
+                    <h4>Price Range</h4>
+                    <div class="price-range">
+                        <input type="range" id="min-price" min="5" max="50" value="5">
+                        <input type="range" id="max-price" min="5" max="50" value="25">
+                        <div class="price-labels">
+                            <span>$5/hour</span>
+                            <span>$25/hour</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h4>Distance</h4>
+                    <div class="distance-options">
+                        <label><input type="radio" name="distance" value="0.5" checked> Within 0.5 miles</label>
+                        <label><input type="radio" name="distance" value="1"> Within 1 mile</label>
+                        <label><input type="radio" name="distance" value="2"> Within 2 miles</label>
+                        <label><input type="radio" name="distance" value="5"> Within 5 miles</label>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h4>Features</h4>
+                    <div class="features-checkboxes">
+                        <label><input type="checkbox" checked> Bluetooth</label>
+                        <label><input type="checkbox"> Backup Camera</label>
+                        <label><input type="checkbox"> GPS Navigation</label>
+                        <label><input type="checkbox"> USB Ports</label>
+                        <label><input type="checkbox"> Sunroof</label>
+                        <label><input type="checkbox"> All-Wheel Drive</label>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h4>Host Rating</h4>
+                    <div class="rating-filter">
+                        <label><input type="radio" name="rating" value="any" checked> Any rating</label>
+                        <label><input type="radio" name="rating" value="4"> 4+ stars</label>
+                        <label><input type="radio" name="rating" value="4.5"> 4.5+ stars</label>
+                        <label><input type="radio" name="rating" value="superhost"> Superhosts only</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="clear-filters-btn">Clear All</button>
+                <button class="apply-filters-btn" onclick="applyFilters()">Apply Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="search_interactions.js"></script>
+</body>
+</html>
