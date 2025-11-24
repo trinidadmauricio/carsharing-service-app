@@ -1,13 +1,21 @@
 /**
  * Atoms Components Index
- * Basic building blocks - Will be implemented in Day 2
+ * Basic building blocks of the design system
  */
 
-// Export atoms as they are created
-// export { Button } from './Button';
-// export { Input } from './Input';
-// export { Card } from './Card';
-// export { Badge } from './Badge';
-// export { Avatar } from './Avatar';
-// export { ProgressBar } from './ProgressBar';
-// export { Chip } from './Chip';
+// Interactive components
+export { Button } from './Button';
+export { Input } from './Input';
+export { Chip, ChipGroup } from './Chip';
+
+// Display components
+export { Card } from './Card';
+export { Badge } from './Badge';
+export { Avatar, AvatarGroup } from './Avatar';
+export { ProgressBar, StepProgress } from './ProgressBar';
+
+// Typography
+export { Text, Heading, Body, Label, Caption } from './Text';
+
+// Layout
+export { Divider, Spacer } from './Divider';

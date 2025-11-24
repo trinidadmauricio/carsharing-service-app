@@ -1,9 +1,9 @@
 /**
  * Hooks Index
- * Custom React hooks - Will be implemented as needed
+ * Custom React hooks
  */
 
-// Export hooks as they are created
-// export { useAuth } from './useAuth';
-// export { useSecureStorage } from './useSecureStorage';
-// export { useBiometrics } from './useBiometrics';
+export { useAuth, useAuthStore } from './useAuth';
+export { useSecureStorage, STORAGE_KEYS } from './useSecureStorage';
+export { useBiometrics, getBiometricDisplayName } from './useBiometrics';
+export type { BiometricType } from './useBiometrics';

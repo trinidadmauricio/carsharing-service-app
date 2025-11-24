@@ -1,9 +1,8 @@
 /**
  * Molecules Components Index
- * Composed components - Will be implemented as needed
+ * Composed components built from atoms
  */
 
-// Export molecules as they are created
-// export { PinInput } from './PinInput';
+export { PinInput } from './PinInput';
 // export { FiltersSheet } from './FiltersSheet';
 // export { FormField } from './FormField';

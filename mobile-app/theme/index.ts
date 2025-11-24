@@ -1,13 +1,46 @@
 /**
  * Theme Index
- * Centralized theme exports - Will be expanded in Day 2
+ * Centralized theme exports
  */
 
-export { tokens } from './tokens';
-export type { Tokens } from './tokens';
+// Colors
+export { palette, lightColors, darkColors } from './colors';
+export type { Palette, ThemeColors } from './colors';
 
-// Will be expanded with:
-// export { colors } from './colors';
-// export { typography } from './typography';
-// export { spacing } from './spacing';
-// export { darkMode } from './darkMode';
+// Typography
+export {
+  fontSizes,
+  fontWeights,
+  lineHeights,
+  letterSpacing,
+  textStyles,
+} from './typography';
+export type { FontSize, FontWeight, TextStyleName } from './typography';
+
+// Spacing
+export {
+  spacing,
+  semanticSpacing,
+  borderRadius,
+  borderWidth,
+} from './spacing';
+export type { SpacingKey, BorderRadiusKey } from './spacing';
+
+// Shadows
+export { shadows, coloredShadows, getShadow } from './shadows';
+export type { ShadowSize } from './shadows';
+
+// Dark Mode
+export {
+  useTheme,
+  useThemeColors,
+  getTheme,
+  lightTheme,
+  darkTheme,
+  getStatusBarStyle,
+  getNavigationTheme,
+} from './darkMode';
+export type { Theme, ColorScheme } from './darkMode';
+
+// Legacy tokens export for backwards compatibility
+export { tokens } from './tokens';
