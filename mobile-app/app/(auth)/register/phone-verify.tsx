@@ -129,7 +129,7 @@ export default function PhoneVerifyScreen(): JSX.Element {
           >
             <StepProgress
               steps={4}
-              currentStep={2}
+              currentStep={1}
               labels={stepLabels}
             />
           </Animated.View>

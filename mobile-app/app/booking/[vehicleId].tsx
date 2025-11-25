@@ -150,18 +150,14 @@ export default function BookingConfirmPage() {
   // Handle proceed to protection
   const handleProceed = () => {
     if (vehicle && pricing) {
-      // TODO: Implement protection plan route once it's created
-      // router.push({
-      //   pathname: '/booking/protection',
-      //   params: {
-      //     vehicleId: vehicle.id,
-      //     startDate: startDate.toISOString(),
-      //     endDate: endDate.toISOString(),
-      //     tripDays: tripDays.toString(),
-      //     subtotal: pricing.total.toFixed(2),
-      //   },
-      // });
-      console.log('Proceed to protection plan selection');
+      router.push({
+        pathname: '/booking/protection',
+        params: {
+          vehicleId: vehicle.id,
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+        },
+      });
     }
   };
 

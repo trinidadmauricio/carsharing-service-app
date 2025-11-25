@@ -9,4 +9,5 @@ export { FiltersSheet } from './FiltersSheet';
 export type { FiltersSheetRef } from './FiltersSheet';
 export { PricingBreakdown } from './PricingBreakdown';
 export type { PricingBreakdownProps } from './PricingBreakdown';
+export { ProtectionPlanCard } from './ProtectionPlanCard';
 // export { FormField } from './FormField';

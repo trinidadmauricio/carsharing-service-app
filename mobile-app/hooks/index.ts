@@ -26,3 +26,4 @@ export { useLocation, formatDistance, DEFAULT_LOCATION } from './useLocation';
 
 // Booking hooks
 export { useBookingEligibility, useUserRiskScore } from './useBookingEligibility';
+export { useProtectionPlans, formatCurrency, getTierColor } from './useProtectionPlans';
