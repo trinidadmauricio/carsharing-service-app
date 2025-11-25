@@ -1,62 +1,68 @@
 # Sprint 4: Tasks
 
 **Sprint**: Host Onboarding + Smart Pricing
-**Estado**: ⬜ Not Started
+**Estado**: ✅ Completed (100% - Días 19-24 completados)
 
 ---
 
 ## Día 19-20: Host Registration + Protection
 
 ### `frontend-developer`
-- [ ] Crear `app/(host)/onboarding/index.tsx` - Benefits
-- [ ] Crear `app/(host)/onboarding/requirements.tsx`
-- [ ] Crear `app/(host)/onboarding/documents.tsx`
-- [ ] Crear `app/(host)/onboarding/protection.tsx`
-- [ ] Implementar earnings calculator component
+- [x] Crear `app/(host)/onboarding/index.tsx` - Benefits
+- [x] Crear `app/(host)/onboarding/requirements.tsx`
+- [x] Crear `app/(host)/onboarding/documents.tsx`
+- [x] Crear `app/(host)/onboarding/protection.tsx`
+- [x] Implementar earnings calculator component
 
 ### `typescript-pro`
-- [ ] Crear host protection plan selector
-- [ ] Implementar earnings projection calculation
-- [ ] Definir host onboarding types
+- [x] Crear host protection plan selector
+- [x] Implementar earnings projection calculation
+- [x] Definir host onboarding types
 
 ---
 
-## Día 21-22: Vehicle Listing + Smart Pricing
+## Día 21-22: Vehicle Listing + Smart Pricing ✅
 
 ### `typescript-pro`
-- [ ] Crear `services/pricing.ts` interface
-- [ ] Implementar `calculateSmartPrice` function
-- [ ] Crear `PricingFactors` interface
-- [ ] Crear `SmartPriceResult` interface
+- [x] Crear `services/pricing.ts` interface
+- [x] Implementar `calculateSmartPrice` function
+- [x] Crear `PricingFactors` interface
+- [x] Crear `SmartPriceResult` interface
+- [x] Implementar mock pricing service con algoritmo completo
+- [x] Crear REST pricing service skeleton
 
 ### `react-specialist`
-- [ ] Crear `hooks/useSmartPricing.ts`
-- [ ] Implementar `app/(host)/vehicle/pricing.tsx`
-- [ ] Crear `SmartPricingWidget` molecule
-- [ ] Implementar discount inputs (weekly, monthly)
+- [x] Crear `hooks/useSmartPricing.ts` (7 hooks especializados)
+- [x] Implementar `app/(host)/vehicle/pricing.tsx`
+- [x] Crear `SmartPricingWidget` molecule
+- [x] Implementar discount inputs (weekly, monthly)
+- [x] Integrar validación de precios
 
 ### `frontend-developer`
-- [ ] Crear vehicle info form
-- [ ] Implementar photo upload (8+ photos)
-- [ ] Crear location picker
+- [x] Crear vehicle info form (`app/(host)/vehicle/info.tsx`)
+- [x] Implementar photo upload (8+ photos) con expo-image-picker
+- [x] Crear location picker con ciudades de El Salvador
+- [x] Crear Host Dashboard tab (`app/(tabs)/host.tsx`)
+- [x] Integrar flujo completo en navegación de tabs
+- [x] Validar formularios con feedback en tiempo real
 
 ---
 
-## Día 23-24: Instant Book + Dashboard
+## Día 23-24: Instant Book + Dashboard ✅
 
 ### `react-specialist`
-- [ ] Implementar `app/(host)/vehicle/availability.tsx`
-- [ ] Crear Instant Book toggle prominente
-- [ ] Implementar guest requirements config
-- [ ] Crear availability calendar
+- [x] Implementar `app/(host)/vehicle/availability.tsx`
+- [x] Crear Instant Book toggle prominente
+- [x] Implementar guest requirements config
+- [x] Crear availability calendar
 
 ### `frontend-developer`
-- [ ] Crear `app/(host)/dashboard.tsx`
-- [ ] Implementar earnings summary card
-- [ ] Crear active listings section
-- [ ] Agregar pending requests list
+- [x] Mejorar `app/(host)/dashboard.tsx` con earnings summary detallado
+- [x] Implementar earnings comparison (this month vs last month)
+- [x] Crear active listings section con vehicle cards
+- [x] Agregar pending requests list con accept/decline actions
 
 ### `ux-researcher`
-- [ ] Validar host onboarding flow
-- [ ] Revisar smart pricing UX
-- [ ] Verificar Instant Book messaging
+- [x] Validar host onboarding flow
+- [x] Revisar smart pricing UX
+- [x] Verificar Instant Book messaging

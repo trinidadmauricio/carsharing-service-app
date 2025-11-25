@@ -136,7 +136,7 @@ const FloatingShape: React.FC<{
   );
 };
 
-export default function WelcomeScreen(): JSX.Element {
+export default function WelcomeScreen(): React.JSX.Element {
   const insets = useSafeAreaInsets();
 
   // Animation values

@@ -1,13 +1,15 @@
 /**
  * Tabs Layout
  * Main app navigation after authentication
- * Placeholder - Will be expanded in later sprints
+ * Shows Browse, Bookings, and Profile tabs
  */
+
+import React from 'react';
 
 import { Tabs } from 'expo-router';
 import { Text } from 'react-native';
 
-export default function TabsLayout(): JSX.Element {
+export default function TabsLayout(): React.JSX.Element {
   return (
     <Tabs
       screenOptions={{

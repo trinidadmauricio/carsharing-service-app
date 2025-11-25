@@ -92,7 +92,7 @@ export const Divider: React.FC<DividerProps> = ({
         getVariantStyles(),
         style,
       ]}
-      accessibilityRole="separator"
+      accessibilityLabel="Divider"
     />
   );
 };

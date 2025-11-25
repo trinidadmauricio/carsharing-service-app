@@ -1,0 +1,255 @@
+# Carsharing Service App - Cursor Rules
+
+## Project Context
+This is a React Native/Expo carsharing application for El Salvador, built with TypeScript. The app enables guests to rent vehicles and hosts to list their vehicles, with comprehensive KYC, authentication, search, booking, and payment flows.
+
+## Core Technologies
+- React Native 0.81.5 with Expo ~54.0.25
+- TypeScript 5.9.2 (strict mode enabled)
+- Expo Router ~6.0.15 (file-based routing)
+- TanStack React Query ^5.90.10 for remote state
+- React Hook Form + Zod for forms and validation
+- React Native Reanimated for animations
+
+## Critical Rules
+
+### TypeScript Strict Mode
+- ALWAYS use TypeScript strict mode
+- NEVER use `any` - use `unknown` for truly unknown types
+- All functions MUST have explicit return types
+- All API requests/responses MUST be typed
+
+### React 19 JSX Types
+```typescript
+// ✅ CORRECT - React 19 syntax
+import React from 'react';
+export default function MyComponent(): React.JSX.Element {
+  return <View />;
+}
+
+// ❌ WRONG - Old syntax
+export default function MyComponent(): JSX.Element {
+  return <View />;
+}
+```
+- ALWAYS import React when using JSX types
+- ALWAYS use `React.JSX.Element` instead of `JSX.Element`
+
+### Service Layer Pattern (Mock/REST)
+All API services follow a dual-implementation pattern:
+- `services/modes/mock/` - Mock implementations with hardcoded data
+- `services/modes/rest/` - Real REST API implementations
+- `services/index.ts` - Mode selector (ENV.API_MODE determines which)
+
+**CRITICAL**: When adding new API functionality:
+1. Define TypeScript interfaces first
+2. Implement mock version with realistic delays
+3. Implement REST version with same interface
+4. NEVER mix implementations - always use service layer through `svc` export
+
+### Component Organization (Atomic Design)
+- `components/atoms/` - Basic components (Button, Input, Card) - no UI component dependencies
+- `components/molecules/` - Composed components (FiltersSheet, PinInput)
+- `components/organisms/` - Complex components (complete forms)
+- Use `index.ts` for clean exports
+
+### Authentication Security
+- Access tokens: Stored in memory ONLY (never persisted)
+- Refresh tokens: Stored in expo-secure-store
+- Automatic refresh: apiClient handles 401s and token refresh
+- NEVER store access tokens in AsyncStorage or state
+- NEVER hardcode credentials or API keys
+- Always use HTTPS in production
+- Validate all user inputs
+
+### Data Fetching (React Query)
+- ALWAYS use TanStack Query for async operations
+- NEVER use useState + useEffect for data fetching
+- Use queries for reading data, mutations for write operations
+- Always handle errors and loading states
+
+### Safe Area Handling
+ALWAYS respect device safe areas using hooks:
+```typescript
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function MyScreen() {
+  const insets = useSafeAreaInsets();
+  return (
+    <View style={[styles.bottomCTA, {
+      paddingBottom: insets.bottom + spacing['3']
+    }]}>
+      {/* Content */}
+    </View>
+  );
+}
+```
+- Use `useSafeAreaInsets()` hook, NOT SafeAreaView for fixed positioned elements
+- Critical areas: Bottom navigation, fixed bottom CTAs, top headers with transparent backgrounds, modals
+
+### Platform-Specific Code
+Handle iOS vs Android differences explicitly:
+```typescript
+import { Platform } from 'react-native';
+
+const styles = StyleSheet.create({
+  input: {
+    ...Platform.select({
+      android: {
+        textAlignVertical: 'center',
+        includeFontPadding: false,
+      },
+      ios: {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+    }),
+  },
+});
+```
+
+### Color Palette Usage
+ALWAYS use semantic color names from design system:
+- ✅ `palette.primary[500]`, `palette.info[500]`, `palette.success[500]`, `palette.error[500]`, `palette.neutral[500]`
+- ❌ NEVER use `palette.blue[500]`, `palette.green[500]`, `palette.red[500]` (don't exist)
+
+### Design Tokens
+- NEVER hardcode colors, spacing, or font sizes
+- ALWAYS reference design tokens from `theme/` directory
+- Use `spacing`, `borderRadius`, `textStyles`, `palette` from theme system
+
+### Input Component Best Practices
+```typescript
+// ✅ CORRECT - Fixed height with platform-specific centering
+const styles = StyleSheet.create({
+  inputContainer: {
+    height: 48,              // Fixed height, not minHeight
+    justifyContent: 'center',
+  },
+  input: {
+    paddingVertical: 0,
+    ...Platform.select({
+      android: {
+        textAlignVertical: 'center',
+        includeFontPadding: false,
+      },
+      ios: {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+    }),
+  },
+});
+```
+
+### Promise Handling
+ALWAYS handle promise rejections, even for non-blocking operations:
+```typescript
+// ✅ CORRECT
+svc.vehicles.trackView(vehicleId).catch((err) => {
+  console.warn('Failed to track vehicle view:', err);
+});
+
+// ❌ WRONG - Unhandled promise rejection
+svc.vehicles.trackView(vehicleId);
+```
+
+### Error Handling
+- Use structured error handling
+- NEVER expose stack traces or technical details to users
+- Always show user-friendly error messages
+- Log errors for debugging
+
+### Performance Optimization
+- Use `FlatList` for long lists, NEVER `ScrollView`
+- Implement `keyExtractor` and `getItemLayout` for lists
+- Lazy load images with `expo-image`
+- Use `useMemo` and `useCallback` only when necessary
+- Profile before optimizing
+
+### Accessibility Requirements
+- ALL interactive elements need `accessibilityLabel`
+- Use appropriate `accessibilityRole`
+- Support screen readers (VoiceOver/TalkBack)
+- Minimum contrast ratio: WCAG AA (4.5:1)
+- Touch targets: 44x44pt minimum
+
+### Test-Driven Development (TDD)
+- ALWAYS write tests BEFORE implementation (Red-Green-Refactor)
+- Minimum 80% coverage for critical code paths
+- Test types: Unit tests, Integration tests, E2E tests
+- Mock external dependencies (API, SecureStore, etc.)
+
+### Build & Type Checking
+Before committing, ALWAYS verify:
+```bash
+npm run build    # Must show: 0 TypeScript errors
+npm run lint     # Must show: 0 ESLint errors (warnings acceptable)
+```
+- NEVER commit code with TypeScript or ESLint errors
+
+### Git Workflow
+- Commit format: Conventional Commits (`feat:`, `fix:`, `refactor:`, `test:`, etc.)
+- Branch naming: `feature/`, `fix/`, `refactor/`
+- Commits: Atomic and descriptive
+- PRs: Small and focused
+
+### Code Quality Checklist
+Before considering code complete:
+- [ ] Tests written and passing (TDD)
+- [ ] TypeScript types defined (no `any`)
+- [ ] Error handling implemented
+- [ ] Accessibility labels added
+- [ ] Security considerations addressed
+- [ ] Design tokens used (no hardcoded values)
+- [ ] Performance profiled (if applicable)
+- [ ] Documentation updated
+
+### Payment Integration
+**CRITICAL**: This app uses server-side payment processing only:
+- NO Stripe SDK in the app
+- App calls `POST /payments/checkout` to initiate payment
+- Server returns URL for web-based checkout
+- App opens URL in Custom Tab/SafariView
+- Deep link returns: `carsharing://payment-result?bookingId=X&status=success`
+- NEVER implement direct payment processing in the mobile app
+
+### KYC Implementation
+Both guests and hosts must complete KYC:
+- Document capture: ID/license photos with quality validation
+- Selfie verification: Basic facial matching
+- Status tracking: `pending` | `approved` | `rejected`
+- Conditional blocking: Cannot complete booking (guest) or list vehicle (host) until KYC is `approved`
+
+### Environment Configuration
+Variables managed through `app.config.ts` and `.env`:
+- `EXPO_PUBLIC_API_MODE`: 'mock' | 'live'
+- `EXPO_PUBLIC_API_BASE_URL`: API endpoint
+- `EXPO_PUBLIC_DEEP_LINK_SCHEME`: 'carsharing'
+- `EXPO_PUBLIC_ENV`: 'dev' | 'stage' | 'prod'
+
+### Important Notes
+1. Read planning documents first (`docs/plan-detallado.md`) - they contain critical architectural decisions
+2. Reference prototypes in `prototype/` for exact UX implementation details
+3. Follow TDD religiously - tests must be written before implementation
+4. Never compromise security - this app handles sensitive financial and personal data
+5. Maintain the mock/rest duality - both implementations must always work
+6. The project documentation is in Spanish, but code should use English
+
+### File Structure
+- `app/` - Expo Router (file-based routing)
+- `components/` - React components (atoms/molecules/organisms)
+- `hooks/` - Custom React hooks
+- `services/` - API service layer (mock/rest)
+- `theme/` - Design system tokens
+- `types/` - TypeScript type definitions
+- `utils/` - Utility functions
+
+### Quick Reference
+- React Native: https://reactnative.dev/docs/
+- Expo: https://docs.expo.dev/
+- Expo Router: https://docs.expo.dev/router/introduction/
+- TanStack Query: https://tanstack.com/query/latest
+- TypeScript: https://www.typescriptlang.org/docs/
+- OWASP Mobile Security: https://owasp.org/www-project-mobile-security/
+

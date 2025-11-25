@@ -3,10 +3,12 @@
  * Placeholder - Will be fully implemented in Day 5
  */
 
+import React from 'react';
+
 import { View, Text, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 
-export default function ForgotPasswordScreen(): JSX.Element {
+export default function ForgotPasswordScreen(): React.JSX.Element {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Forgot Password</Text>

@@ -13,6 +13,7 @@ import {
   TextStyle,
   TextInputProps,
   Pressable,
+  Platform,
 } from 'react-native';
 import { useThemeColors } from '@/theme';
 import { textStyles } from '@/theme/typography';
@@ -84,13 +85,9 @@ export const Input = forwardRef<TextInput, InputProps>(
 
     const getBackgroundColor = (): string => {
       if (variant === 'filled') {
-        return state === 'disabled'
-          ? colors.background.tertiary
-          : colors.background.secondary;
+        return state === 'disabled' ? colors.background.tertiary : colors.background.secondary;
       }
-      return state === 'disabled'
-        ? colors.background.secondary
-        : colors.background.primary;
+      return state === 'disabled' ? colors.background.secondary : colors.background.primary;
     };
 
     const getLabelColor = (): string => {
@@ -110,14 +107,8 @@ export const Input = forwardRef<TextInput, InputProps>(
       <View style={[styles.container, containerStyle]}>
         {label && (
           <View style={styles.labelContainer}>
-            <Text style={[styles.label, { color: getLabelColor() }]}>
-              {label}
-            </Text>
-            {required && (
-              <Text style={[styles.required, { color: colors.status.error }]}>
-                *
-              </Text>
-            )}
+            <Text style={[styles.label, { color: getLabelColor() }]}>{label}</Text>
+            {required && <Text style={[styles.required, { color: colors.status.error }]}>*</Text>}
           </View>
         )}
 
@@ -150,9 +141,10 @@ export const Input = forwardRef<TextInput, InputProps>(
               textStyles.bodyMedium,
               {
                 color: editable ? colors.text.primary : colors.text.tertiary,
+                lineHeight: 20, // Override lineHeight for better vertical centering in input
               },
-              leftIcon && styles.inputWithLeftIcon,
-              rightIcon && styles.inputWithRightIcon,
+              leftIcon ? styles.inputWithLeftIcon : undefined,
+              rightIcon ? styles.inputWithRightIcon : undefined,
               inputStyle,
             ]}
             placeholderTextColor={colors.text.tertiary}
@@ -209,9 +201,10 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: borderWidth.thin,
     borderRadius: borderRadius.lg,
-    minHeight: 48,
+    height: 48,
   },
   inputContainerFilled: {
     borderWidth: 0,
@@ -222,8 +215,19 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    paddingVertical: spacing['3'],
     paddingHorizontal: spacing['4'],
+    paddingVertical: 0,
+    marginVertical: 0,
+    ...Platform.select({
+      android: {
+        textAlignVertical: 'center',
+        includeFontPadding: false,
+      },
+      ios: {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+    }),
   },
   inputWithLeftIcon: {
     paddingLeft: spacing['2'],

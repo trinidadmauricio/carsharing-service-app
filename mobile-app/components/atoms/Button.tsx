@@ -21,10 +21,11 @@ import { getShadow } from '@/theme/shadows';
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
-interface ButtonProps extends Omit<PressableProps, 'style'> {
+interface ButtonProps extends Omit<PressableProps, 'style' | 'children'> {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  title: string;
+  title?: string;
+  children?: React.ReactNode;
   loading?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;
@@ -38,6 +39,7 @@ export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
   title,
+  children,
   loading = false,
   disabled = false,
   fullWidth = false,
@@ -49,6 +51,9 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const colors = useThemeColors();
   const isDisabled = disabled || loading;
+
+  // Support both title and children props
+  const displayText = title || (typeof children === 'string' ? children : 'Button');
 
   const getVariantStyles = (pressed: boolean): ViewStyle => {
     const baseStyle: ViewStyle = {};
@@ -150,7 +155,7 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={isDisabled}
       accessibilityRole="button"
       accessibilityState={{ disabled: isDisabled }}
-      accessibilityLabel={title}
+      accessibilityLabel={displayText}
       style={({ pressed }) => [
         styles.base,
         sizeStyles.container,
@@ -172,12 +177,12 @@ export const Button: React.FC<ButtonProps> = ({
             style={[
               sizeStyles.text,
               { color: getTextColor() },
-              leftIcon && styles.textWithLeftIcon,
-              rightIcon && styles.textWithRightIcon,
+              leftIcon ? styles.textWithLeftIcon : undefined,
+              rightIcon ? styles.textWithRightIcon : undefined,
               textStyle,
             ]}
           >
-            {title}
+            {displayText}
           </Text>
           {rightIcon && <>{rightIcon}</>}
         </>

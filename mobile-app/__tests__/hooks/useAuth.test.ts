@@ -5,6 +5,10 @@
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { useAuth, useAuthStore } from '@/hooks/useAuth';
 
+import * as SecureStore from 'expo-secure-store';
+import { svc } from '@/services';
+import { router } from 'expo-router';
+
 // Mock dependencies
 jest.mock('expo-router', () => ({
   router: {
@@ -27,10 +31,6 @@ jest.mock('@/services', () => ({
     },
   },
 }));
-
-import * as SecureStore from 'expo-secure-store';
-import { svc } from '@/services';
-import { router } from 'expo-router';
 
 describe('useAuth', () => {
   beforeEach(() => {
