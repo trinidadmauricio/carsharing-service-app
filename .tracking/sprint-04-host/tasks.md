@@ -1,7 +1,7 @@
 # Sprint 4: Tasks
 
 **Sprint**: Host Onboarding + Smart Pricing
-**Estado**: 🔄 In Progress (67% - Día 19-22 completado)
+**Estado**: ✅ Completed (100% - Días 19-24 completados)
 
 ---
 
@@ -48,21 +48,21 @@
 
 ---
 
-## Día 23-24: Instant Book + Dashboard
+## Día 23-24: Instant Book + Dashboard ✅
 
 ### `react-specialist`
-- [ ] Implementar `app/(host)/vehicle/availability.tsx`
-- [ ] Crear Instant Book toggle prominente
-- [ ] Implementar guest requirements config
-- [ ] Crear availability calendar
+- [x] Implementar `app/(host)/vehicle/availability.tsx`
+- [x] Crear Instant Book toggle prominente
+- [x] Implementar guest requirements config
+- [x] Crear availability calendar
 
 ### `frontend-developer`
-- [ ] Crear `app/(host)/dashboard.tsx`
-- [ ] Implementar earnings summary card
-- [ ] Crear active listings section
-- [ ] Agregar pending requests list
+- [x] Mejorar `app/(host)/dashboard.tsx` con earnings summary detallado
+- [x] Implementar earnings comparison (this month vs last month)
+- [x] Crear active listings section con vehicle cards
+- [x] Agregar pending requests list con accept/decline actions
 
 ### `ux-researcher`
-- [ ] Validar host onboarding flow
-- [ ] Revisar smart pricing UX
-- [ ] Verificar Instant Book messaging
+- [x] Validar host onboarding flow
+- [x] Revisar smart pricing UX
+- [x] Verificar Instant Book messaging

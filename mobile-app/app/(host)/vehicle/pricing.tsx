@@ -119,9 +119,16 @@ export default function VehiclePricingScreen(): React.JSX.Element {
       return;
     }
 
-    // For now, just go back or show success
-    Alert.alert('Success', 'Pricing saved successfully!');
-    // TODO: Save to backend and navigate to next step
+    // Navigate to availability screen
+    router.push({
+      pathname: '/(host)/vehicle/availability',
+      params: {
+        ...params,
+        dailyRate: dailyRate,
+        weeklyDiscount: weeklyDiscount,
+        monthlyDiscount: monthlyDiscount,
+      },
+    });
   };
 
   return (

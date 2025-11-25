@@ -3,15 +3,38 @@
  * Main dashboard for hosts to manage their vehicles and bookings
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text, Button } from '../../components/atoms';
 import { palette, spacing } from '@/theme';
+import type { HostDashboardStats, VehicleListing } from '../../types';
 
 export default function HostDashboardScreen(): React.JSX.Element {
   const insets = useSafeAreaInsets();
+
+  // Mock data - in production this would come from API
+  const [stats] = useState<HostDashboardStats>({
+    totalEarnings: 2850.0,
+    thisMonthEarnings: 485.0,
+    lastMonthEarnings: 620.0,
+    pendingPayouts: 245.0,
+    totalTrips: 12,
+    activeTrips: 1,
+    upcomingTrips: 2,
+    completedTrips: 9,
+    totalVehicles: 2,
+    activeVehicles: 2,
+    inactiveVehicles: 0,
+    pendingApproval: 0,
+    averageRating: 4.8,
+    responseRate: 98,
+    acceptanceRate: 92,
+    pendingRequests: 3,
+  });
+
+  const [hasVehicles] = useState(false); // Toggle for demo
 
   const handleListVehicle = (): void => {
     router.push('/(host)/vehicle/info');
@@ -19,6 +42,26 @@ export default function HostDashboardScreen(): React.JSX.Element {
 
   const handleViewOnboarding = (): void => {
     router.push('/(host)/onboarding');
+  };
+
+  const formatCurrency = (amount: number): string => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  const getEarningsChange = (): string => {
+    if (stats.lastMonthEarnings === 0) return '+100%';
+    const change =
+      ((stats.thisMonthEarnings - stats.lastMonthEarnings) / stats.lastMonthEarnings) * 100;
+    return change >= 0 ? `+${change.toFixed(0)}%` : `${change.toFixed(0)}%`;
+  };
+
+  const isEarningsUp = (): boolean => {
+    return stats.thisMonthEarnings >= stats.lastMonthEarnings;
   };
 
   return (
@@ -38,20 +81,73 @@ export default function HostDashboardScreen(): React.JSX.Element {
           </Text>
         </View>
 
-        {/* Quick Stats */}
-        <View style={styles.statsContainer}>
-          <View style={styles.statCard}>
-            <Text variant="h1" style={styles.statValue}>
-              $0
-            </Text>
-            <Text variant="caption" color="secondary">
-              Total Earnings
-            </Text>
+        {/* Earnings Summary Card */}
+        <View style={styles.earningsCard}>
+          <View style={styles.earningsHeader}>
+            <View>
+              <Text variant="labelMedium" color="secondary">
+                This Month
+              </Text>
+              <Text variant="h1" style={styles.earningsAmount}>
+                {formatCurrency(stats.thisMonthEarnings)}
+              </Text>
+            </View>
+            <View
+              style={[
+                styles.changeBadge,
+                {
+                  backgroundColor: isEarningsUp()
+                    ? palette.success[50]
+                    : palette.error[50],
+                },
+              ]}
+            >
+              <Text
+                variant="labelSmall"
+                style={{
+                  color: isEarningsUp() ? palette.success[700] : palette.error[700],
+                }}
+              >
+                {getEarningsChange()}
+              </Text>
+            </View>
           </View>
 
+          <View style={styles.earningsDetails}>
+            <View style={styles.earningsDetailItem}>
+              <Text variant="caption" color="secondary">
+                Last Month
+              </Text>
+              <Text variant="labelLarge">
+                {formatCurrency(stats.lastMonthEarnings)}
+              </Text>
+            </View>
+            <View style={styles.earningsDetailDivider} />
+            <View style={styles.earningsDetailItem}>
+              <Text variant="caption" color="secondary">
+                Pending Payout
+              </Text>
+              <Text variant="labelLarge" style={{ color: palette.warning[600] }}>
+                {formatCurrency(stats.pendingPayouts)}
+              </Text>
+            </View>
+            <View style={styles.earningsDetailDivider} />
+            <View style={styles.earningsDetailItem}>
+              <Text variant="caption" color="secondary">
+                Total Earned
+              </Text>
+              <Text variant="labelLarge">
+                {formatCurrency(stats.totalEarnings)}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Quick Stats Row */}
+        <View style={styles.statsContainer}>
           <View style={styles.statCard}>
-            <Text variant="h1" style={styles.statValue}>
-              0
+            <Text variant="h2" style={styles.statValue}>
+              {stats.activeVehicles}
             </Text>
             <Text variant="caption" color="secondary">
               Active Vehicles
@@ -59,11 +155,20 @@ export default function HostDashboardScreen(): React.JSX.Element {
           </View>
 
           <View style={styles.statCard}>
-            <Text variant="h1" style={styles.statValue}>
-              0
+            <Text variant="h2" style={styles.statValue}>
+              {stats.activeTrips}
             </Text>
             <Text variant="caption" color="secondary">
-              Total Trips
+              Active Trips
+            </Text>
+          </View>
+
+          <View style={styles.statCard}>
+            <Text variant="h2" style={styles.statValue}>
+              {stats.averageRating.toFixed(1)} ⭐
+            </Text>
+            <Text variant="caption" color="secondary">
+              Rating
             </Text>
           </View>
         </View>
@@ -101,6 +206,78 @@ export default function HostDashboardScreen(): React.JSX.Element {
           </Pressable>
         </View>
 
+        {/* Pending Requests */}
+        {stats.pendingRequests > 0 && (
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text variant="h3">Pending Requests</Text>
+              <View style={styles.badge}>
+                <Text variant="labelSmall" style={styles.badgeText}>
+                  {stats.pendingRequests}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.requestCard}>
+              <View style={styles.requestHeader}>
+                <View>
+                  <Text variant="labelLarge">2024 Honda Civic</Text>
+                  <Text variant="caption" color="secondary">
+                    Apr 15 - Apr 18 (3 days)
+                  </Text>
+                </View>
+                <Text variant="h4" style={{ color: palette.primary[500] }}>
+                  $135
+                </Text>
+              </View>
+              <View style={styles.requestGuest}>
+                <Text variant="bodySmall" color="secondary">
+                  Guest: Maria Rodriguez • 4.9 ⭐ • 8 trips
+                </Text>
+              </View>
+              <View style={styles.requestActions}>
+                <Button variant="outline" size="sm" style={styles.requestButton}>
+                  Decline
+                </Button>
+                <Button size="sm" style={styles.requestButton}>
+                  Accept
+                </Button>
+              </View>
+            </View>
+
+            <View style={styles.requestCard}>
+              <View style={styles.requestHeader}>
+                <View>
+                  <Text variant="labelLarge">2023 Toyota RAV4</Text>
+                  <Text variant="caption" color="secondary">
+                    Apr 20 - Apr 27 (7 days)
+                  </Text>
+                </View>
+                <Text variant="h4" style={{ color: palette.primary[500] }}>
+                  $350
+                </Text>
+              </View>
+              <View style={styles.requestGuest}>
+                <Text variant="bodySmall" color="secondary">
+                  Guest: Carlos Mendez • 4.7 ⭐ • 15 trips
+                </Text>
+              </View>
+              <View style={styles.requestActions}>
+                <Button variant="outline" size="sm" style={styles.requestButton}>
+                  Decline
+                </Button>
+                <Button size="sm" style={styles.requestButton}>
+                  Accept
+                </Button>
+              </View>
+            </View>
+
+            <Button variant="ghost" style={styles.viewAllButton}>
+              View All Requests ({stats.pendingRequests})
+            </Button>
+          </View>
+        )}
+
         {/* Vehicles Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -110,18 +287,62 @@ export default function HostDashboardScreen(): React.JSX.Element {
             </Button>
           </View>
 
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyIcon}>🚙</Text>
-            <Text variant="h4" style={styles.emptyTitle}>
-              No vehicles listed yet
-            </Text>
-            <Text variant="bodyMedium" color="secondary" style={styles.emptyText}>
-              List your first vehicle to start earning money
-            </Text>
-            <Button onPress={handleListVehicle} style={styles.emptyButton}>
-              List Your First Vehicle
-            </Button>
-          </View>
+          {hasVehicles ? (
+            <>
+              <View style={styles.vehicleCard}>
+                <View style={styles.vehicleImage}>
+                  <Text style={styles.vehiclePlaceholder}>🚗</Text>
+                </View>
+                <View style={styles.vehicleInfo}>
+                  <Text variant="labelLarge">2024 Honda Civic</Text>
+                  <Text variant="caption" color="secondary" style={styles.vehicleDetail}>
+                    Active • $45/day • San Salvador
+                  </Text>
+                  <View style={styles.vehicleStats}>
+                    <Text variant="caption" style={styles.vehicleStat}>
+                      5 trips • 4.9 ⭐
+                    </Text>
+                  </View>
+                </View>
+                <Pressable style={styles.vehicleAction}>
+                  <Text style={styles.actionArrow}>›</Text>
+                </Pressable>
+              </View>
+
+              <View style={styles.vehicleCard}>
+                <View style={styles.vehicleImage}>
+                  <Text style={styles.vehiclePlaceholder}>🚙</Text>
+                </View>
+                <View style={styles.vehicleInfo}>
+                  <Text variant="labelLarge">2023 Toyota RAV4</Text>
+                  <Text variant="caption" color="secondary" style={styles.vehicleDetail}>
+                    Active • $50/day • San Salvador
+                  </Text>
+                  <View style={styles.vehicleStats}>
+                    <Text variant="caption" style={styles.vehicleStat}>
+                      7 trips • 4.8 ⭐
+                    </Text>
+                  </View>
+                </View>
+                <Pressable style={styles.vehicleAction}>
+                  <Text style={styles.actionArrow}>›</Text>
+                </Pressable>
+              </View>
+            </>
+          ) : (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyIcon}>🚙</Text>
+              <Text variant="h4" style={styles.emptyTitle}>
+                No vehicles listed yet
+              </Text>
+              <Text variant="bodyMedium" color="secondary" style={styles.emptyText}>
+                List your first vehicle to start earning money
+              </Text>
+              <Button onPress={handleListVehicle} style={styles.emptyButton}>
+                List Your First Vehicle
+              </Button>
+            </View>
+          )}
         </View>
 
         {/* Info Card */}
@@ -256,5 +477,126 @@ const styles = StyleSheet.create({
   },
   infoText: {
     lineHeight: 20,
+  },
+  // Earnings Card
+  earningsCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: spacing['5'],
+    marginBottom: spacing['5'],
+    borderWidth: 1,
+    borderColor: palette.neutral[200],
+  },
+  earningsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: spacing['4'],
+  },
+  earningsAmount: {
+    color: palette.primary[600],
+    marginTop: spacing['1'],
+  },
+  changeBadge: {
+    paddingHorizontal: spacing['3'],
+    paddingVertical: spacing['1'],
+    borderRadius: 20,
+  },
+  earningsDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: spacing['4'],
+    borderTopWidth: 1,
+    borderTopColor: palette.neutral[200],
+  },
+  earningsDetailItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  earningsDetailDivider: {
+    width: 1,
+    backgroundColor: palette.neutral[200],
+    marginHorizontal: spacing['2'],
+  },
+  // Badge
+  badge: {
+    backgroundColor: palette.primary[500],
+    borderRadius: 12,
+    paddingHorizontal: spacing['2'],
+    paddingVertical: 2,
+    minWidth: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
+    color: '#ffffff',
+    fontWeight: '600',
+  },
+  // Request Cards
+  requestCard: {
+    backgroundColor: '#ffffff',
+    padding: spacing['4'],
+    borderRadius: 12,
+    marginBottom: spacing['3'],
+    borderWidth: 1,
+    borderColor: palette.neutral[200],
+  },
+  requestHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: spacing['2'],
+  },
+  requestGuest: {
+    marginBottom: spacing['3'],
+  },
+  requestActions: {
+    flexDirection: 'row',
+    gap: spacing['2'],
+  },
+  requestButton: {
+    flex: 1,
+  },
+  viewAllButton: {
+    marginTop: spacing['2'],
+  },
+  // Vehicle Cards
+  vehicleCard: {
+    flexDirection: 'row',
+    backgroundColor: '#ffffff',
+    padding: spacing['4'],
+    borderRadius: 12,
+    marginBottom: spacing['3'],
+    borderWidth: 1,
+    borderColor: palette.neutral[200],
+  },
+  vehicleImage: {
+    width: 64,
+    height: 64,
+    borderRadius: 8,
+    backgroundColor: palette.neutral[100],
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: spacing['3'],
+  },
+  vehiclePlaceholder: {
+    fontSize: 32,
+  },
+  vehicleInfo: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  vehicleDetail: {
+    marginTop: spacing['1'],
+  },
+  vehicleStats: {
+    marginTop: spacing['2'],
+  },
+  vehicleStat: {
+    color: palette.neutral[600],
+  },
+  vehicleAction: {
+    justifyContent: 'center',
+    paddingLeft: spacing['3'],
   },
 });
