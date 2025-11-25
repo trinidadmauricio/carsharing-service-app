@@ -96,6 +96,22 @@
 - ✅ Todas las validaciones de formularios funcionando
 - ✅ Permissions handling correcto (camera, photo library)
 
+### UX Refactor (Post-Implementation):
+**Problema identificado:** Tab "Host" permanente confundía a usuarios guest-only.
+
+**Solución implementada (patrón Turo/Getaround):**
+- ❌ Removido: Host tab de navegación principal
+- ✅ Agregado: "Switch to Hosting" en Profile screen
+- ✅ Agregado: "Become a Host" promotional card
+- ✅ Movido: Host Dashboard de `(tabs)/` a `(host)/dashboard.tsx`
+- ✅ Navegación: Profile → Host Dashboard → Vehicle Listing
+
+**Beneficios:**
+- Cleaner 3-tab navigation (Browse, Bookings, Profile)
+- No confusion para guest-only users
+- Mejor discoverability para host onboarding
+- Sigue patrones de industria (Turo, Getaround)
+
 ---
 
 ## Métricas Target
