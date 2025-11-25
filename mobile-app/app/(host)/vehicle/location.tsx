@@ -66,13 +66,13 @@ export default function VehicleLocationScreen(): React.JSX.Element {
     // Success - would normally save to backend and continue to next step
     Alert.alert(
       'Success',
-      `Location saved!\n\n${address}\n${city}, ${state} ${zipCode}\n\nYour vehicle listing is ready for review!`,
+      `Location saved!\n\n${address}\n${city}, ${state} ${zipCode}\n\nYour vehicle listing is complete!`,
       [
         {
           text: 'OK',
           onPress: () => {
-            // Navigate back to host dashboard or listing preview
-            router.replace('/(host)/onboarding/protection' as any);
+            // Navigate back to host dashboard
+            router.replace('/(tabs)/host');
           },
         },
       ]

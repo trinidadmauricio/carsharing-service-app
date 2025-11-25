@@ -1,7 +1,7 @@
 # Sprint 4: Tasks
 
 **Sprint**: Host Onboarding + Smart Pricing
-**Estado**: 🔄 In Progress (33% - Día 19-20 completado)
+**Estado**: 🔄 In Progress (67% - Día 19-22 completado)
 
 ---
 
@@ -21,24 +21,30 @@
 
 ---
 
-## Día 21-22: Vehicle Listing + Smart Pricing
+## Día 21-22: Vehicle Listing + Smart Pricing ✅
 
 ### `typescript-pro`
-- [ ] Crear `services/pricing.ts` interface
-- [ ] Implementar `calculateSmartPrice` function
-- [ ] Crear `PricingFactors` interface
-- [ ] Crear `SmartPriceResult` interface
+- [x] Crear `services/pricing.ts` interface
+- [x] Implementar `calculateSmartPrice` function
+- [x] Crear `PricingFactors` interface
+- [x] Crear `SmartPriceResult` interface
+- [x] Implementar mock pricing service con algoritmo completo
+- [x] Crear REST pricing service skeleton
 
 ### `react-specialist`
-- [ ] Crear `hooks/useSmartPricing.ts`
-- [ ] Implementar `app/(host)/vehicle/pricing.tsx`
-- [ ] Crear `SmartPricingWidget` molecule
-- [ ] Implementar discount inputs (weekly, monthly)
+- [x] Crear `hooks/useSmartPricing.ts` (7 hooks especializados)
+- [x] Implementar `app/(host)/vehicle/pricing.tsx`
+- [x] Crear `SmartPricingWidget` molecule
+- [x] Implementar discount inputs (weekly, monthly)
+- [x] Integrar validación de precios
 
 ### `frontend-developer`
-- [ ] Crear vehicle info form
-- [ ] Implementar photo upload (8+ photos)
-- [ ] Crear location picker
+- [x] Crear vehicle info form (`app/(host)/vehicle/info.tsx`)
+- [x] Implementar photo upload (8+ photos) con expo-image-picker
+- [x] Crear location picker con ciudades de El Salvador
+- [x] Crear Host Dashboard tab (`app/(tabs)/host.tsx`)
+- [x] Integrar flujo completo en navegación de tabs
+- [x] Validar formularios con feedback en tiempo real
 
 ---
 

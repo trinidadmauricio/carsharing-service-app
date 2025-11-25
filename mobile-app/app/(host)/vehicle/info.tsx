@@ -119,7 +119,7 @@ export default function VehicleInfoScreen(): React.JSX.Element {
 
     // Navigate to photos screen with vehicle info
     router.push({
-      pathname: '/(host)/vehicle/photos' as any,
+      pathname: '/(host)/vehicle/photos',
       params: {
         year,
         make,

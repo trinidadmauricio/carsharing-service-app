@@ -1,7 +1,7 @@
 /**
  * Tabs Layout
  * Main app navigation after authentication
- * Placeholder - Will be expanded in later sprints
+ * Shows Browse, Bookings, Host Dashboard, and Profile tabs
  */
 
 import React from 'react';
@@ -34,6 +34,13 @@ export default function TabsLayout(): React.JSX.Element {
         options={{
           title: 'Bookings',
           tabBarIcon: ({ color }) => <Text style={{ color }}>📅</Text>,
+        }}
+      />
+      <Tabs.Screen
+        name="host"
+        options={{
+          title: 'Host',
+          tabBarIcon: ({ color }) => <Text style={{ color }}>🏠</Text>,
         }}
       />
       <Tabs.Screen
