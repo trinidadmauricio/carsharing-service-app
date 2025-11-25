@@ -26,37 +26,36 @@ import { useThemeColors, palette } from '@/theme';
 import { spacing, semanticSpacing, borderRadius } from '@/theme/spacing';
 
 // Validation schema
-const registrationSchema = z.object({
-  firstName: z
-    .string()
-    .min(2, 'First name must be at least 2 characters')
-    .max(50, 'First name must be less than 50 characters')
-    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'First name can only contain letters'),
-  lastName: z
-    .string()
-    .min(2, 'Last name must be at least 2 characters')
-    .max(50, 'Last name must be less than 50 characters')
-    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'Last name can only contain letters'),
-  email: z
-    .string()
-    .email('Please enter a valid email address')
-    .min(1, 'Email is required'),
-  phone: z
-    .string()
-    .min(8, 'Phone number must be at least 8 digits')
-    .max(15, 'Phone number must be less than 15 digits')
-    .regex(/^[0-9+\-\s]+$/, 'Please enter a valid phone number'),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-    .regex(/[0-9]/, 'Password must contain at least one number'),
-  confirmPassword: z.string().min(1, 'Please confirm your password'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Passwords do not match',
-  path: ['confirmPassword'],
-});
+const registrationSchema = z
+  .object({
+    firstName: z
+      .string()
+      .min(2, 'First name must be at least 2 characters')
+      .max(50, 'First name must be less than 50 characters')
+      .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'First name can only contain letters'),
+    lastName: z
+      .string()
+      .min(2, 'Last name must be at least 2 characters')
+      .max(50, 'Last name must be less than 50 characters')
+      .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'Last name can only contain letters'),
+    email: z.string().email('Please enter a valid email address').min(1, 'Email is required'),
+    phone: z
+      .string()
+      .min(8, 'Phone number must be at least 8 digits')
+      .max(15, 'Phone number must be less than 15 digits')
+      .regex(/^[0-9+\-\s]+$/, 'Please enter a valid phone number'),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .regex(/[0-9]/, 'Password must contain at least one number'),
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
 
@@ -73,16 +72,8 @@ const PasswordRequirements: React.FC<{ password: string }> = ({ password }) => {
     <View style={styles.requirementsContainer}>
       {requirements.map((req, index) => (
         <View key={index} style={styles.requirementItem}>
-          <View
-            style={[
-              styles.requirementDot,
-              req.met && styles.requirementDotMet,
-            ]}
-          />
-          <Text
-            variant="caption"
-            color={req.met ? 'success' : 'tertiary'}
-          >
+          <View style={[styles.requirementDot, req.met && styles.requirementDotMet]} />
+          <Text variant="caption" color={req.met ? 'success' : 'tertiary'}>
             {req.label}
           </Text>
         </View>
@@ -99,6 +90,7 @@ export default function RegistrationFormScreen(): React.JSX.Element {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [footerHeight, setFooterHeight] = useState(0);
 
   const {
     control,
@@ -165,7 +157,10 @@ export default function RegistrationFormScreen(): React.JSX.Element {
           style={[styles.scrollView, { backgroundColor: colors.background.primary }]}
           contentContainerStyle={[
             styles.scrollContent,
-            { paddingTop: insets.top + spacing['16'] },
+            {
+              paddingTop: insets.top + spacing['16'],
+              paddingBottom: footerHeight > 0 ? footerHeight + spacing['2'] : spacing['24'],
+            },
           ]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
@@ -175,18 +170,11 @@ export default function RegistrationFormScreen(): React.JSX.Element {
             entering={FadeInDown.delay(100).duration(400)}
             style={styles.progressContainer}
           >
-            <StepProgress
-              steps={4}
-              currentStep={1}
-              labels={stepLabels}
-            />
+            <StepProgress steps={4} currentStep={1} labels={stepLabels} />
           </Animated.View>
 
           {/* Header */}
-          <Animated.View
-            entering={FadeInDown.delay(200).duration(400)}
-            style={styles.header}
-          >
+          <Animated.View entering={FadeInDown.delay(200).duration(400)} style={styles.header}>
             <Heading level={1} style={styles.title}>
               Create your account
             </Heading>
@@ -198,10 +186,7 @@ export default function RegistrationFormScreen(): React.JSX.Element {
           </Animated.View>
 
           {/* Form */}
-          <Animated.View
-            entering={FadeInDown.delay(300).duration(400)}
-            style={styles.form}
-          >
+          <Animated.View entering={FadeInDown.delay(300).duration(400)} style={styles.form}>
             {/* Name row */}
             <View style={styles.nameRow}>
               <View style={styles.nameField}>
@@ -320,9 +305,7 @@ export default function RegistrationFormScreen(): React.JSX.Element {
             />
 
             {/* Password requirements */}
-            {watchPassword.length > 0 && (
-              <PasswordRequirements password={watchPassword} />
-            )}
+            {watchPassword.length > 0 && <PasswordRequirements password={watchPassword} />}
 
             {/* Confirm Password */}
             <Controller
@@ -377,6 +360,10 @@ export default function RegistrationFormScreen(): React.JSX.Element {
         {/* Submit button */}
         <Animated.View
           entering={FadeInDown.delay(500).duration(400)}
+          onLayout={(event) => {
+            const { height } = event.nativeEvent.layout;
+            setFooterHeight(height);
+          }}
           style={[
             styles.footer,
             {

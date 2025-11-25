@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useLocalSearchParams, router, Stack } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Text } from '@/components/atoms/Text';
@@ -48,6 +48,7 @@ function formatDate(dateString: string): string {
 
 export default function ProtectionSelectionScreen(): React.ReactElement {
   const colors = useThemeColors();
+  const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{
     vehicleId: string;
     startDate: string;
@@ -120,7 +121,7 @@ export default function ProtectionSelectionScreen(): React.ReactElement {
 
   if (vehicleLoading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background.primary }]} edges={['top']}>
+      <View style={[styles.container, { backgroundColor: colors.background.primary }]}>
         <Stack.Screen
           options={{
             headerShown: true,
@@ -131,13 +132,13 @@ export default function ProtectionSelectionScreen(): React.ReactElement {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.interactive.primary} />
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   if (!vehicle) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background.primary }]} edges={['top']}>
+      <View style={[styles.container, { backgroundColor: colors.background.primary }]}>
         <Stack.Screen
           options={{
             headerShown: true,
@@ -159,12 +160,12 @@ export default function ProtectionSelectionScreen(): React.ReactElement {
             Go Back
           </Button>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background.primary }]} edges={['top']}>
+    <View style={[styles.container, { backgroundColor: colors.background.primary }]}>
       <Stack.Screen
         options={{
           headerShown: true,
@@ -173,7 +174,14 @@ export default function ProtectionSelectionScreen(): React.ReactElement {
         }}
       />
 
-      <View style={styles.content}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingTop: spacing['2'] },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Trip Summary Card */}
         <Card style={styles.summaryCard}>
           <View style={styles.vehicleInfo}>
@@ -211,7 +219,7 @@ export default function ProtectionSelectionScreen(): React.ReactElement {
             onPlanSelected={handlePlanSelected}
           />
         </View>
-      </View>
+      </ScrollView>
 
       {/* Bottom CTA */}
       <View
@@ -220,6 +228,7 @@ export default function ProtectionSelectionScreen(): React.ReactElement {
           {
             backgroundColor: colors.background.primary,
             borderTopColor: colors.border.default,
+            paddingBottom: insets.bottom + spacing['4'],
           },
         ]}
       >
@@ -243,7 +252,7 @@ export default function ProtectionSelectionScreen(): React.ReactElement {
           </Button>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -251,8 +260,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  content: {
+  scrollView: {
     flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: spacing['4'],
   },
   loadingContainer: {
     flex: 1,
@@ -273,13 +285,12 @@ const styles = StyleSheet.create({
     gap: spacing['1'],
   },
   selectorContainer: {
-    flex: 1,
+    paddingHorizontal: spacing['4'],
   },
   bottomCTA: {
     borderTopWidth: 1,
     paddingHorizontal: spacing['4'],
-    paddingVertical: spacing['4'],
-    paddingBottom: spacing['6'],
+    paddingTop: spacing['4'],
   },
   ctaContent: {
     flexDirection: 'row',
