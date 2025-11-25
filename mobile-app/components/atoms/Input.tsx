@@ -137,7 +137,6 @@ export const Input = forwardRef<TextInput, InputProps>(
             ref={ref}
             {...textInputProps}
             editable={editable}
-            textAlignVertical="center"
             onFocus={(e) => {
               setIsFocused(true);
               textInputProps.onFocus?.(e);
@@ -223,9 +222,9 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    paddingVertical: 0,
     paddingHorizontal: spacing['4'],
-    height: '100%',
+    paddingVertical: 11, // (48 minHeight - 26 lineHeight) / 2 = 11
+    lineHeight: 26, // Match bodyMedium lineHeight explicitly
   },
   inputWithLeftIcon: {
     paddingLeft: spacing['2'],
