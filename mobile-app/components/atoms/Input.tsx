@@ -151,8 +151,8 @@ export const Input = forwardRef<TextInput, InputProps>(
               {
                 color: editable ? colors.text.primary : colors.text.tertiary,
               },
-              leftIcon && styles.inputWithLeftIcon,
-              rightIcon && styles.inputWithRightIcon,
+              leftIcon ? styles.inputWithLeftIcon : undefined,
+              rightIcon ? styles.inputWithRightIcon : undefined,
               inputStyle,
             ]}
             placeholderTextColor={colors.text.tertiary}

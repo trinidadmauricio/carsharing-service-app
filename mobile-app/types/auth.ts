@@ -34,6 +34,9 @@ export interface LoginRequest {
   password: string;
 }
 
+// Alias for backward compatibility
+export type LoginCredentials = LoginRequest;
+
 export interface LoginResponse {
   user: User;
   tokens: AuthTokens;

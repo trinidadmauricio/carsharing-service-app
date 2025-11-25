@@ -307,7 +307,7 @@ export default function LoginScreen(): JSX.Element {
                 accessibilityRole="button"
                 accessibilityLabel="Sign in with Apple"
               >
-                <Text style={styles.socialIcon}></Text>
+                <Text style={styles.socialIcon}> </Text>
                 <Text variant="labelMedium">Apple</Text>
               </Pressable>
             </View>

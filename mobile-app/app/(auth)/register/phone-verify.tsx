@@ -49,6 +49,7 @@ export default function PhoneVerifyScreen(): JSX.Element {
       return () => clearTimeout(timer);
     } else {
       setCanResend(true);
+      return undefined;
     }
   }, [resendTimer]);
 

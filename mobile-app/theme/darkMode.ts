@@ -16,7 +16,7 @@ export interface Theme {
 
 // Get theme based on color scheme
 export const getTheme = (colorScheme: ColorScheme): Theme => ({
-  colors: colorScheme === 'dark' ? darkColors : lightColors,
+  colors: (colorScheme === 'dark' ? darkColors : lightColors) as ThemeColors,
   isDark: colorScheme === 'dark',
 });
 
@@ -34,13 +34,13 @@ export const useThemeColors = (): ThemeColors => {
 
 // Light theme
 export const lightTheme: Theme = {
-  colors: lightColors,
+  colors: lightColors as ThemeColors,
   isDark: false,
 };
 
 // Dark theme
 export const darkTheme: Theme = {
-  colors: darkColors,
+  colors: darkColors as unknown as ThemeColors,
   isDark: true,
 };
 

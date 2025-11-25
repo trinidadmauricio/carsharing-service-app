@@ -5,8 +5,11 @@
 
 import Constants from 'expo-constants';
 import { AuthService } from './auth';
+import { VehicleService } from './vehicles';
 import { authMock } from './modes/mock/auth.mock';
 import { authRest } from './modes/rest/auth.rest';
+import { vehiclesMock } from './modes/mock/vehicles.mock';
+import { vehiclesRest } from './modes/rest/vehicles.rest';
 
 type ApiMode = 'mock' | 'live';
 
@@ -17,8 +20,8 @@ const getApiMode = (): ApiMode => {
 
 interface Services {
   auth: AuthService;
+  vehicles: VehicleService;
   // Add more services as they are implemented:
-  // vehicles: VehicleService;
   // bookings: BookingService;
   // protection: ProtectionService;
   // pricing: PricingService;
@@ -31,7 +34,7 @@ const createServices = (mode: ApiMode): Services => {
 
   return {
     auth: isMock ? authMock : authRest,
-    // vehicles: isMock ? vehiclesMock : vehiclesRest,
+    vehicles: isMock ? vehiclesMock : vehiclesRest,
     // bookings: isMock ? bookingsMock : bookingsRest,
     // protection: isMock ? protectionMock : protectionRest,
     // pricing: isMock ? pricingMock : pricingRest,
@@ -48,6 +51,7 @@ export type { Services };
 
 // Re-export service interfaces
 export type { AuthService } from './auth';
+export type { VehicleService } from './vehicles';
 
 // Export API client for direct use when needed
 export { apiClient } from './apiClient';

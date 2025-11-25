@@ -5,6 +5,7 @@
 
 import React from 'react';
 import {
+  View,
   Pressable,
   Text,
   StyleSheet,
@@ -192,7 +193,7 @@ export const Chip: React.FC<ChipProps> = ({
 
 // ChipGroup for multiple selection
 interface ChipGroupProps {
-  chips: Array<{ id: string; label: string }>;
+  chips: { id: string; label: string }[];
   selectedIds: string[];
   onSelectionChange: (ids: string[]) => void;
   multiple?: boolean;
@@ -225,10 +226,7 @@ export const ChipGroup: React.FC<ChipGroupProps> = ({
   };
 
   return (
-    <Pressable
-      style={[styles.groupContainer, style]}
-      accessibilityRole="group"
-    >
+    <View style={[styles.groupContainer, style]}>
       {chips.map((chip) => (
         <Chip
           key={chip.id}
@@ -240,7 +238,7 @@ export const ChipGroup: React.FC<ChipGroupProps> = ({
           style={chipStyle}
         />
       ))}
-    </Pressable>
+    </View>
   );
 };
 

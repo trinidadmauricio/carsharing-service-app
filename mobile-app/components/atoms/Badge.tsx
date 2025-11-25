@@ -9,13 +9,14 @@ import { useThemeColors } from '@/theme';
 import { textStyles } from '@/theme/typography';
 import { spacing, borderRadius } from '@/theme/spacing';
 
-type BadgeVariant = 'success' | 'warning' | 'error' | 'info' | 'neutral' | 'primary';
+type BadgeVariant = 'success' | 'warning' | 'error' | 'info' | 'neutral' | 'primary' | 'danger';
 type BadgeSize = 'sm' | 'md' | 'lg';
 
 interface BadgeProps {
   variant?: BadgeVariant;
   size?: BadgeSize;
-  label: string;
+  label?: string;
+  children?: React.ReactNode;
   icon?: React.ReactNode;
   style?: ViewStyle;
   textStyle?: TextStyle;
@@ -26,12 +27,16 @@ export const Badge: React.FC<BadgeProps> = ({
   variant = 'neutral',
   size = 'md',
   label,
+  children,
   icon,
   style,
   textStyle,
   dot = false,
 }) => {
   const colors = useThemeColors();
+
+  // Support both label and children props
+  const displayText = label || children;
 
   const getVariantColors = (): { bg: string; text: string } => {
     switch (variant) {
@@ -46,6 +51,7 @@ export const Badge: React.FC<BadgeProps> = ({
           text: colors.status.warning,
         };
       case 'error':
+      case 'danger':
         return {
           bg: colors.status.errorBg,
           text: colors.status.error,
@@ -121,7 +127,7 @@ export const Badge: React.FC<BadgeProps> = ({
         style,
       ]}
       accessibilityRole="text"
-      accessibilityLabel={label}
+      accessibilityLabel={typeof displayText === 'string' ? displayText : undefined}
     >
       {dot && (
         <View
@@ -141,7 +147,7 @@ export const Badge: React.FC<BadgeProps> = ({
         ]}
         numberOfLines={1}
       >
-        {label}
+        {displayText}
       </Text>
     </View>
   );

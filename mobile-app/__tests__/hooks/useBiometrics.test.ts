@@ -5,6 +5,8 @@
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { useBiometrics, getBiometricDisplayName } from '@/hooks/useBiometrics';
 
+import * as LocalAuthentication from 'expo-local-authentication';
+
 // Mock expo-local-authentication
 jest.mock('expo-local-authentication', () => ({
   hasHardwareAsync: jest.fn(),
@@ -17,8 +19,6 @@ jest.mock('expo-local-authentication', () => ({
     IRIS: 3,
   },
 }));
-
-import * as LocalAuthentication from 'expo-local-authentication';
 
 describe('useBiometrics', () => {
   beforeEach(() => {

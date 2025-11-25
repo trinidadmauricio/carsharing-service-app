@@ -207,6 +207,23 @@ export const textStyles = {
     lineHeight: fontSizes.sm * lineHeights.normal,
     letterSpacing: letterSpacing.wide,
   } as TextStyle,
+
+  // Legacy aliases for backward compatibility
+  body1: {
+    fontFamily,
+    fontSize: fontSizes.md,
+    fontWeight: fontWeights.normal,
+    lineHeight: fontSizes.md * lineHeights.relaxed,
+    letterSpacing: letterSpacing.normal,
+  } as TextStyle,
+
+  body2: {
+    fontFamily,
+    fontSize: fontSizes.sm,
+    fontWeight: fontWeights.normal,
+    lineHeight: fontSizes.sm * lineHeights.relaxed,
+    letterSpacing: letterSpacing.normal,
+  } as TextStyle,
 } as const;
 
 export type FontSize = keyof typeof fontSizes;

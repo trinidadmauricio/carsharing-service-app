@@ -10,8 +10,7 @@ import { create } from 'zustand';
 import { useSecureStorage, STORAGE_KEYS } from './useSecureStorage';
 import { useBiometrics } from './useBiometrics';
 import { svc } from '@/services';
-import type { User, UserRole } from '@/types/user';
-import type { LoginCredentials, AuthTokens } from '@/types/auth';
+import type { User, UserRole, LoginCredentials, AuthTokens } from '@/types/auth';
 
 // Auth state store
 interface AuthState {
@@ -102,14 +101,7 @@ export function useAuth(): UseAuthReturn {
       try {
         const response = await svc.auth.login(credentials);
 
-        if (!response.success || !response.data) {
-          return {
-            success: false,
-            error: response.error?.message || 'Login failed',
-          };
-        }
-
-        const { user: userData, tokens } = response.data;
+        const { user: userData, tokens } = response;
 
         // Store refresh token securely (NEVER store access token)
         await setItem(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken);
@@ -122,9 +114,10 @@ export function useAuth(): UseAuthReturn {
         return { success: true };
       } catch (error) {
         console.error('Login error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
         return {
           success: false,
-          error: 'An unexpected error occurred',
+          error: errorMessage,
         };
       } finally {
         setIsLoading(false);
@@ -189,19 +182,14 @@ export function useAuth(): UseAuthReturn {
 
       const response = await svc.auth.refreshToken(refreshToken);
 
-      if (!response.success || !response.data) {
-        setIsLoading(false);
-        return false;
-      }
-
-      const { user: userData, tokens } = response.data;
+      const { tokens } = response;
 
       // Update stored refresh token
       await setItem(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken);
 
       // Update memory state
       setAccessToken(tokens.accessToken);
-      setUser(userData);
+      // Note: User data is not returned in refresh, keep existing user
       setIsLoading(false);
 
       return true;
