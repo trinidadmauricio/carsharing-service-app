@@ -314,7 +314,7 @@ export default function BookingConfirmPage() {
           {!eligibilityLoading && eligibilityError && (
             <Card variant="outlined" style={StyleSheet.flatten([styles.eligibilityCard, styles.infoCard])}>
               <View style={styles.eligibilityHeader}>
-                <Ionicons name="information-circle" size={24} color={palette.blue[500]} />
+                <Ionicons name="information-circle" size={24} color={palette.info[500]} />
                 <Text variant="h4" style={styles.infoTitle}>
                   Ready to Book
                 </Text>
@@ -618,12 +618,12 @@ const styles = StyleSheet.create({
     color: palette.gray[700],
   },
   infoCard: {
-    borderColor: palette.blue[200],
-    backgroundColor: palette.blue[50],
+    borderColor: palette.info[200],
+    backgroundColor: palette.info[50],
   },
   infoTitle: {
     marginLeft: spacing['2'],
-    color: palette.blue[700],
+    color: palette.info[700],
   },
   infoText: {
     color: palette.gray[700],
