@@ -87,7 +87,7 @@ export default function BookingSuccessScreen(): React.JSX.Element {
       const calendars = await Calendar.getCalendarsAsync(
         Calendar.EntityTypes.EVENT
       );
-      const defaultCalendar = calendars.find((cal) => cal.allowsModifications);
+      const defaultCalendar = calendars.find((cal: any) => cal.allowsModifications);
 
       if (!defaultCalendar) {
         Alert.alert('Error', 'No calendar available for adding events.');

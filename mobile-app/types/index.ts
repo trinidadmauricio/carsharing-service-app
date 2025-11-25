@@ -28,3 +28,4 @@ export * from './riskScore';
 export * from './vehicle';
 export * from './search';
 export * from './booking';
+export * from './host';
