@@ -82,12 +82,19 @@ export default function BrowseScreen(): React.ReactElement {
     });
   }, [vehicles.length, totalCount, isLoading, isError, error, coordinates, locationLoading]);
 
-  // Update search location when user location is available
-  React.useEffect(() => {
-    if (coordinates && !locationLoading) {
-      setLocation(coordinates);
-    }
-  }, [coordinates, locationLoading, setLocation]);
+  // Note: We don't auto-update search location to user's current location
+  // because mock data is in San Salvador and simulator location is in Cupertino.
+  // In production, you would either:
+  // 1. Show a prompt asking user if they want to search near their location
+  // 2. Have a "Use my location" button
+  // 3. Have vehicles in the user's actual area
+
+  // Commented out automatic location update:
+  // React.useEffect(() => {
+  //   if (coordinates && !locationLoading) {
+  //     setLocation(coordinates);
+  //   }
+  // }, [coordinates, locationLoading, setLocation]);
 
   // Handle vehicle selection
   const handleVehiclePress = (vehicleId: string): void => {
