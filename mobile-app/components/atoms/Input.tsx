@@ -201,9 +201,10 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: borderWidth.thin,
     borderRadius: borderRadius.lg,
-    minHeight: 48,
+    height: 48,
   },
   inputContainerFilled: {
     borderWidth: 0,
