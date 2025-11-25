@@ -109,7 +109,7 @@ export default function HostOnboardingBenefitsScreen(): React.JSX.Element {
         </View>
 
         {/* Earnings Highlight */}
-        <Card style={[styles.earningsCard, { backgroundColor: palette.success[50] }]}>
+        <Card style={styles.earningsCard}>
           <View style={styles.earningsHeader}>
             <Ionicons name="trending-up" size={24} color={palette.success[700]} />
             <Text
@@ -158,10 +158,7 @@ export default function HostOnboardingBenefitsScreen(): React.JSX.Element {
           {BENEFITS.map((benefit) => (
             <Card
               key={benefit.id}
-              style={[
-                styles.benefitCard,
-                benefit.highlight && { borderWidth: 2, borderColor: palette.primary[500] },
-              ]}
+              style={benefit.highlight ? styles.benefitCardHighlight : styles.benefitCard}
             >
               <View style={styles.benefitHeader}>
                 <View
@@ -308,6 +305,7 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing['4'],
     padding: spacing['4'],
     marginBottom: spacing['6'],
+    backgroundColor: palette.success[50],
   },
   earningsHeader: {
     flexDirection: 'row',
@@ -328,6 +326,12 @@ const styles = StyleSheet.create({
   benefitCard: {
     marginBottom: spacing['3'],
     padding: spacing['4'],
+  },
+  benefitCardHighlight: {
+    marginBottom: spacing['3'],
+    padding: spacing['4'],
+    borderWidth: 2,
+    borderColor: palette.primary[500],
   },
   benefitHeader: {
     flexDirection: 'row',

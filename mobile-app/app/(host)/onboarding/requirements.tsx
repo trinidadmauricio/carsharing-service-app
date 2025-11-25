@@ -179,7 +179,7 @@ export default function HostOnboardingRequirementsScreen(): React.JSX.Element {
         </View>
 
         {/* Important Notes */}
-        <Card style={[styles.notesCard, { backgroundColor: palette.info[50] }]}>
+        <Card style={styles.notesCard}>
           <View style={styles.notesHeader}>
             <Ionicons name="information-circle" size={20} color={palette.info[600]} />
             <Text
@@ -312,6 +312,7 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing['4'],
     padding: spacing['4'],
     marginBottom: spacing['4'],
+    backgroundColor: palette.info[50],
   },
   notesHeader: {
     flexDirection: 'row',

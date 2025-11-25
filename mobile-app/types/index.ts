@@ -5,7 +5,6 @@
 
 export * from './auth';
 export type {
-  User,
   GuestProfile,
   HostProfile,
   CoHost,
