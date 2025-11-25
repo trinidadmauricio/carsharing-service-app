@@ -10,4 +10,5 @@ export type { FiltersSheetRef } from './FiltersSheet';
 export { PricingBreakdown } from './PricingBreakdown';
 export type { PricingBreakdownProps } from './PricingBreakdown';
 export { ProtectionPlanCard } from './ProtectionPlanCard';
+export { SmartPricingWidget } from './SmartPricingWidget';
 // export { FormField } from './FormField';
