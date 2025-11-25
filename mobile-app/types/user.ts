@@ -3,9 +3,12 @@
  * Extended user profile and guest/host specific types
  */
 
-import type { User } from './auth';
+import type { User as AuthUser } from './auth';
 
-export interface GuestProfile extends User {
+// Re-export User for convenience
+export type User = AuthUser;
+
+export interface GuestProfile extends AuthUser {
   dateOfBirth: string;
   licenseNumber: string;
   licenseState: string;
@@ -19,7 +22,7 @@ export interface GuestProfile extends User {
   favoriteVehicles: string[];
 }
 
-export interface HostProfile extends User {
+export interface HostProfile extends AuthUser {
   businessName?: string;
   taxId?: string;
   protectionPlanId: string;

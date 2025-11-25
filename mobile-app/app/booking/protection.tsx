@@ -91,23 +91,22 @@ export default function ProtectionSelectionScreen(): React.ReactElement {
     }
 
     // Navigate to payment screen
-    // TODO: Implement payment screen route
-    // router.push({
-    //   pathname: '/booking/payment',
-    //   params: {
-    //     vehicleId,
-    //     startDate,
-    //     endDate,
-    //     startTime,
-    //     endTime,
-    //     protectionPlanId: selectedPlan.id,
-    //   },
-    // });
-
-    Alert.alert(
-      'Coming Soon',
-      'Payment integration will be implemented in the next sprint.'
-    );
+    router.push({
+      pathname: '/booking/payment' as any,
+      params: {
+        vehicleId,
+        vehicleName: `${vehicle?.year} ${vehicle?.make} ${vehicle?.model}`,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        protectionPlanId: selectedPlan.id,
+        protectionPlanName: selectedPlan.name,
+        dailyRate: dailyRate.toString(),
+        total: totalPrice.toString(),
+        instantBook: 'false', // TODO: Get from booking eligibility
+      },
+    });
   };
 
   // Handle back navigation

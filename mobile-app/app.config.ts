@@ -23,6 +23,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       NSPhotoLibraryUsageDescription: 'We need photo library access to upload vehicle photos.',
       NSLocationWhenInUseUsageDescription: 'We need your location to find vehicles near you.',
       NSFaceIDUsageDescription: 'We use Face ID to securely log you in.',
+      NSCalendarsUsageDescription: 'We need calendar access to add your booking to your calendar.',
     },
   },
   android: {
@@ -39,6 +40,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'ACCESS_COARSE_LOCATION',
       'USE_BIOMETRIC',
       'USE_FINGERPRINT',
+      'READ_CALENDAR',
+      'WRITE_CALENDAR',
     ],
     edgeToEdgeEnabled: true,
   },
@@ -72,6 +75,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-local-authentication',
       {
         faceIDPermission: 'Allow Carsharing SV to use Face ID for secure authentication.',
+      },
+    ],
+    [
+      'expo-calendar',
+      {
+        calendarPermission: 'Allow Carsharing SV to add bookings to your calendar.',
       },
     ],
   ],
