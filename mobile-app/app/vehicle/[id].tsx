@@ -101,7 +101,7 @@ export default function VehicleDetailPage() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background.primary }]}>
+      <View style={[styles.container, { backgroundColor: colors.background.primary }]}>
         <Stack.Screen options={{ headerShown: false }} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={palette.primary[500]} />
@@ -109,13 +109,13 @@ export default function VehicleDetailPage() {
             Loading vehicle...
           </Text>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   if (isError || !vehicle) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background.primary }]}>
+      <View style={[styles.container, { backgroundColor: colors.background.primary }]}>
         <Stack.Screen options={{ headerShown: false }} />
         <View style={styles.errorContainer}>
           <Ionicons name="car-outline" size={64} color={palette.gray[400]} />
@@ -129,7 +129,7 @@ export default function VehicleDetailPage() {
             Go back
           </Button>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
