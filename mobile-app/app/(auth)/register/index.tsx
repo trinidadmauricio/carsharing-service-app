@@ -150,7 +150,7 @@ const SelectionCard: React.FC<{
   );
 };
 
-export default function AccountTypeScreen(): JSX.Element {
+export default function AccountTypeScreen(): React.JSX.Element {
   const insets = useSafeAreaInsets();
   const colors = useThemeColors();
   const [selectedType, setSelectedType] = useState<AccountType>(null);

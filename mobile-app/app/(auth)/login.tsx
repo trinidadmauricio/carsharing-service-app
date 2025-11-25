@@ -39,7 +39,7 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-export default function LoginScreen(): JSX.Element {
+export default function LoginScreen(): React.JSX.Element {
   const insets = useSafeAreaInsets();
   const colors = useThemeColors();
   const { login, loginWithBiometrics, isLoading: authLoading } = useAuth();

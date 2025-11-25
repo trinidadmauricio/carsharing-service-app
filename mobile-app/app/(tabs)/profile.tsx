@@ -4,11 +4,13 @@
  * Placeholder - Will be implemented in Sprint 3
  */
 
+import React from 'react';
+
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import { svc } from '@/services';
 
-export default function ProfileScreen(): JSX.Element {
+export default function ProfileScreen(): React.JSX.Element {
   const handleLogout = async (): Promise<void> => {
     await svc.auth.logout();
     router.replace('/(auth)');

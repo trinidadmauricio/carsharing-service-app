@@ -96,8 +96,8 @@ export const PinInput: React.FC<PinInputProps> = ({
     setIsFocused(false);
   };
 
-  const renderDigits = (): JSX.Element[] => {
-    const digits: JSX.Element[] = [];
+  const renderDigits = (): React.JSX.Element[] => {
+    const digits: React.JSX.Element[] = [];
 
     for (let i = 0; i < length; i++) {
       const isCurrentIndex = i === value.length;

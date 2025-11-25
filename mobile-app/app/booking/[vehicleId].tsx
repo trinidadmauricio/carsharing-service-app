@@ -206,7 +206,13 @@ export default function BookingConfirmPage() {
         }}
       />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingTop: insets.top + spacing['3'] }
+        ]}
+      >
         {/* Vehicle Summary Card */}
         <Card variant="elevated" style={styles.vehicleCard}>
           <View style={styles.vehicleContent}>
@@ -457,10 +463,10 @@ export default function BookingConfirmPage() {
         )}
         <Button
           onPress={handleProceed}
-          disabled={(!canBook && !eligibilityError) || eligibilityLoading}
+          disabled={!vehicle || !pricing || eligibilityLoading}
           style={styles.proceedButton}
         >
-          {canInstantBook ? 'Continue' : 'Continue'}
+          Continue
         </Button>
       </View>
     </View>
@@ -473,7 +479,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: spacing['4'],
-    paddingTop: spacing['3'],
     paddingBottom: spacing['6'],
   },
   loadingContainer: {

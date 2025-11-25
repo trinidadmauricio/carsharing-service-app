@@ -24,7 +24,7 @@ import { spacing, semanticSpacing, borderRadius } from '@/theme/spacing';
 const RESEND_COOLDOWN = 60; // seconds
 const CODE_LENGTH = 6;
 
-export default function PhoneVerifyScreen(): JSX.Element {
+export default function PhoneVerifyScreen(): React.JSX.Element {
   const insets = useSafeAreaInsets();
   const colors = useThemeColors();
   const { phone, type } = useLocalSearchParams<{ phone: string; type: 'guest' | 'host' }>();

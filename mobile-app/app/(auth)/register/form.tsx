@@ -91,7 +91,7 @@ const PasswordRequirements: React.FC<{ password: string }> = ({ password }) => {
   );
 };
 
-export default function RegistrationFormScreen(): JSX.Element {
+export default function RegistrationFormScreen(): React.JSX.Element {
   const insets = useSafeAreaInsets();
   const colors = useThemeColors();
   const { type } = useLocalSearchParams<{ type: 'guest' | 'host' }>();

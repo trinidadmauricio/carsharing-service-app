@@ -4,9 +4,11 @@
  * Placeholder - Will be implemented in Sprint 3
  */
 
+import React from 'react';
+
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function BookingsScreen(): JSX.Element {
+export default function BookingsScreen(): React.JSX.Element {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>My Bookings</Text>

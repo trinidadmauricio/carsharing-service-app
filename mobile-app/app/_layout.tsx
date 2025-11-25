@@ -3,6 +3,8 @@
  * Main layout for the app with providers and navigation structure
  */
 
+import React from 'react';
+
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -26,7 +28,7 @@ const queryClient = new QueryClient({
   },
 });
 
-export default function RootLayout(): JSX.Element {
+export default function RootLayout(): React.JSX.Element {
   useEffect(() => {
     // Initialize API client on app start
     apiClient.initialize();

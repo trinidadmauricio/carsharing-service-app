@@ -4,10 +4,12 @@
  * Placeholder - Will be expanded in later sprints
  */
 
+import React from 'react';
+
 import { Tabs } from 'expo-router';
 import { Text } from 'react-native';
 
-export default function TabsLayout(): JSX.Element {
+export default function TabsLayout(): React.JSX.Element {
   return (
     <Tabs
       screenOptions={{
