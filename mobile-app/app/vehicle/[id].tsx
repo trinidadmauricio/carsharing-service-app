@@ -16,7 +16,7 @@ import {
   ViewToken,
 } from 'react-native';
 import { useLocalSearchParams, router, Stack } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
   useSharedValue,
@@ -49,6 +49,7 @@ export default function VehicleDetailPage() {
   const colors = useThemeColors();
   const params = useLocalSearchParams<{ id: string }>();
   const vehicleId = params.id;
+  const insets = useSafeAreaInsets();
 
   const scrollY = useSharedValue(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -420,7 +421,7 @@ export default function VehicleDetailPage() {
       </ScrollView>
 
       {/* Sticky Bottom CTA */}
-      <View style={[styles.bottomCTA, { backgroundColor: colors.background.primary }]}>
+      <View style={[styles.bottomCTA, { backgroundColor: colors.background.primary, paddingBottom: insets.bottom + spacing['3'] }]}>
         <View style={styles.ctaLeft}>
           <Text variant="h4" style={styles.ctaPrice}>
             ${vehicle.pricing.dailyRate}

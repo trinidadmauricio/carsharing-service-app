@@ -13,7 +13,7 @@ import {
   Pressable,
 } from 'react-native';
 import { useLocalSearchParams, router, Stack } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -57,6 +57,7 @@ export default function BookingConfirmPage() {
   const colors = useThemeColors();
   const params = useLocalSearchParams<{ vehicleId: string }>();
   const vehicleId = params.vehicleId;
+  const insets = useSafeAreaInsets();
 
   // Date state (default to tomorrow 10AM - day after 10AM)
   const tomorrow = useMemo(() => {
@@ -440,7 +441,10 @@ export default function BookingConfirmPage() {
       )}
 
       {/* Bottom CTA */}
-      <View style={[styles.bottomCTA, { backgroundColor: colors.background.primary }]}>
+      <View style={[styles.bottomCTA, {
+        backgroundColor: colors.background.primary,
+        paddingBottom: insets.bottom + spacing['3']
+      }]}>
         {pricing && (
           <View style={styles.ctaLeft}>
             <Text variant="caption" style={styles.ctaLabel}>
