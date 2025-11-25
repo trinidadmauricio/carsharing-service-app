@@ -254,9 +254,16 @@ export function useVehicleDetail(vehicleId: string, options?: { enabled?: boolea
   const query = useQuery({
     queryKey: vehicleKeys.detail(vehicleId),
     queryFn: async () => {
-      // Track the view
-      svc.vehicles.trackView(vehicleId);
-      return svc.vehicles.getById(vehicleId);
+      try {
+        // Track the view (don't block on errors)
+        svc.vehicles.trackView(vehicleId).catch((err) => {
+          console.warn('Failed to track vehicle view:', err);
+        });
+        return await svc.vehicles.getById(vehicleId);
+      } catch (error) {
+        console.error('Error fetching vehicle detail:', error);
+        throw error;
+      }
     },
     enabled: enabled && !!vehicleId,
     staleTime: 5 * 60 * 1000, // 5 minutes

@@ -13,6 +13,7 @@ import {
   TextStyle,
   TextInputProps,
   Pressable,
+  Platform,
 } from 'react-native';
 import { useThemeColors } from '@/theme';
 import { textStyles } from '@/theme/typography';
@@ -223,8 +224,15 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     paddingHorizontal: spacing['4'],
-    paddingVertical: 11, // (48 minHeight - 26 lineHeight) / 2 = 11
-    lineHeight: 26, // Match bodyMedium lineHeight explicitly
+    paddingTop: 11,
+    paddingBottom: 11,
+    height: 48,
+    ...Platform.select({
+      ios: {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+    }),
   },
   inputWithLeftIcon: {
     paddingLeft: spacing['2'],

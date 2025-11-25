@@ -84,6 +84,7 @@ export default function BookingConfirmPage() {
   const {
     eligibility,
     isLoading: eligibilityLoading,
+    isError: eligibilityError,
     canBook,
     canInstantBook,
     requiresApproval,
@@ -298,86 +299,102 @@ export default function BookingConfirmPage() {
         </View>
 
         {/* Eligibility Status */}
-        {eligibilityLoading && (
-          <Card variant="outlined" style={styles.eligibilityCard}>
-            <View style={styles.eligibilityLoading}>
-              <ActivityIndicator size="small" color={palette.primary[500]} />
-              <Text variant="body2" style={styles.eligibilityLoadingText}>
-                Checking eligibility...
-              </Text>
-            </View>
-          </Card>
-        )}
-
-        {!eligibilityLoading && blockedReason && (
-          <Card variant="outlined" style={StyleSheet.flatten([styles.eligibilityCard, styles.blockedCard])}>
-            <View style={styles.eligibilityHeader}>
-              <Ionicons name="alert-circle" size={24} color={palette.red[500]} />
-              <Text variant="h4" style={styles.blockedTitle}>
-                Booking Not Available
-              </Text>
-            </View>
-            <Text variant="body2" style={styles.blockedReason}>
-              {blockedReason}
-            </Text>
-          </Card>
-        )}
-
-        {!eligibilityLoading && canBook && (
-          <Card variant="outlined" style={StyleSheet.flatten([styles.eligibilityCard, styles.approvedCard])}>
-            <View style={styles.eligibilityHeader}>
-              <Ionicons
-                name={canInstantBook ? 'flash' : 'checkmark-circle'}
-                size={24}
-                color={canInstantBook ? palette.primary[500] : palette.green[500]}
-              />
-              <Text variant="h4" style={styles.approvedTitle}>
-                {canInstantBook ? 'Instant Book Available' : 'Booking Requires Approval'}
-              </Text>
-            </View>
-            <Text variant="body2" style={styles.approvedText}>
-              {canInstantBook
-                ? 'You can confirm this booking instantly and receive immediate confirmation.'
-                : 'Your booking request will be sent to the host for approval. You\'ll receive a response within 24 hours.'}
-            </Text>
-
-            {/* Risk Score Info */}
-            {eligibility && (
-              <View style={styles.riskInfo}>
-                <Divider style={styles.riskDivider} />
-                <View style={styles.riskHeader}>
-                  <Text variant="caption" style={styles.riskLabel}>
-                    Trust Score: {eligibility.riskScore.score}/100
-                  </Text>
-                  <Badge
-                    variant={
-                      eligibility.riskScore.level === 'low'
-                        ? 'success'
-                        : eligibility.riskScore.level === 'medium'
-                        ? 'warning'
-                        : 'danger'
-                    }
-                    size="sm"
-                  >
-                    {eligibility.riskScore.level.replace('_', ' ').toUpperCase()}
-                  </Badge>
-                </View>
-                {eligibility.restrictions.length > 0 && (
-                  <View style={styles.restrictions}>
-                    {eligibility.restrictions.map((restriction, idx) => (
-                      <View key={idx} style={styles.restrictionItem}>
-                        <Ionicons name="information-circle-outline" size={14} color={palette.gray[600]} />
-                        <Text variant="caption" style={styles.restrictionText}>
-                          {restriction}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                )}
+        <View style={styles.section}>
+          {eligibilityLoading && (
+            <Card variant="outlined" style={styles.eligibilityCard}>
+              <View style={styles.eligibilityLoading}>
+                <ActivityIndicator size="small" color={palette.primary[500]} />
+                <Text variant="body2" style={styles.eligibilityLoadingText}>
+                  Checking eligibility...
+                </Text>
               </View>
-            )}
-          </Card>
-        )}
+            </Card>
+          )}
+
+          {!eligibilityLoading && eligibilityError && (
+            <Card variant="outlined" style={StyleSheet.flatten([styles.eligibilityCard, styles.infoCard])}>
+              <View style={styles.eligibilityHeader}>
+                <Ionicons name="information-circle" size={24} color={palette.blue[500]} />
+                <Text variant="h4" style={styles.infoTitle}>
+                  Ready to Book
+                </Text>
+              </View>
+              <Text variant="body2" style={styles.infoText}>
+                Continue to select your protection plan and confirm your booking.
+              </Text>
+            </Card>
+          )}
+
+          {!eligibilityLoading && !eligibilityError && blockedReason && (
+            <Card variant="outlined" style={StyleSheet.flatten([styles.eligibilityCard, styles.blockedCard])}>
+              <View style={styles.eligibilityHeader}>
+                <Ionicons name="alert-circle" size={24} color={palette.red[500]} />
+                <Text variant="h4" style={styles.blockedTitle}>
+                  Booking Not Available
+                </Text>
+              </View>
+              <Text variant="body2" style={styles.blockedReason}>
+                {blockedReason}
+              </Text>
+            </Card>
+          )}
+
+          {!eligibilityLoading && !eligibilityError && canBook && (
+            <Card variant="outlined" style={StyleSheet.flatten([styles.eligibilityCard, styles.approvedCard])}>
+              <View style={styles.eligibilityHeader}>
+                <Ionicons
+                  name={canInstantBook ? 'flash' : 'checkmark-circle'}
+                  size={24}
+                  color={canInstantBook ? palette.primary[500] : palette.green[500]}
+                />
+                <Text variant="h4" style={styles.approvedTitle}>
+                  {canInstantBook ? 'Instant Book Available' : 'Booking Requires Approval'}
+                </Text>
+              </View>
+              <Text variant="body2" style={styles.approvedText}>
+                {canInstantBook
+                  ? 'You can confirm this booking instantly and receive immediate confirmation.'
+                  : 'Your booking request will be sent to the host for approval. You\'ll receive a response within 24 hours.'}
+              </Text>
+
+              {/* Risk Score Info */}
+              {eligibility && (
+                <View style={styles.riskInfo}>
+                  <Divider style={styles.riskDivider} />
+                  <View style={styles.riskHeader}>
+                    <Text variant="caption" style={styles.riskLabel}>
+                      Trust Score: {eligibility.riskScore.score}/100
+                    </Text>
+                    <Badge
+                      variant={
+                        eligibility.riskScore.level === 'low'
+                          ? 'success'
+                          : eligibility.riskScore.level === 'medium'
+                          ? 'warning'
+                          : 'danger'
+                      }
+                      size="sm"
+                    >
+                      {eligibility.riskScore.level.replace('_', ' ').toUpperCase()}
+                    </Badge>
+                  </View>
+                  {eligibility.restrictions.length > 0 && (
+                    <View style={styles.restrictions}>
+                      {eligibility.restrictions.map((restriction, idx) => (
+                        <View key={idx} style={styles.restrictionItem}>
+                          <Ionicons name="information-circle-outline" size={14} color={palette.gray[600]} />
+                          <Text variant="caption" style={styles.restrictionText}>
+                            {restriction}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                </View>
+              )}
+            </Card>
+          )}
+        </View>
 
         {/* Pricing Breakdown */}
         {pricing && (
@@ -436,10 +453,10 @@ export default function BookingConfirmPage() {
         )}
         <Button
           onPress={handleProceed}
-          disabled={!canBook || eligibilityLoading}
+          disabled={(!canBook && !eligibilityError) || eligibilityLoading}
           style={styles.proceedButton}
         >
-          {canInstantBook ? 'Continue' : 'Request to Book'}
+          {canInstantBook ? 'Continue' : 'Continue'}
         </Button>
       </View>
     </View>
@@ -452,7 +469,8 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: spacing['4'],
-    paddingTop: spacing['4'],
+    paddingTop: spacing['3'],
+    paddingBottom: spacing['6'],
   },
   loadingContainer: {
     flex: 1,
@@ -597,6 +615,17 @@ const styles = StyleSheet.create({
     color: palette.green[700],
   },
   approvedText: {
+    color: palette.gray[700],
+  },
+  infoCard: {
+    borderColor: palette.blue[200],
+    backgroundColor: palette.blue[50],
+  },
+  infoTitle: {
+    marginLeft: spacing['2'],
+    color: palette.blue[700],
+  },
+  infoText: {
     color: palette.gray[700],
   },
   riskInfo: {
