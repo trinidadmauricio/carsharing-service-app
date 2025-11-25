@@ -72,7 +72,7 @@ export default function VehicleLocationScreen(): React.JSX.Element {
           text: 'OK',
           onPress: () => {
             // Navigate back to host dashboard
-            router.replace('/(tabs)/host');
+            router.replace('/(host)/dashboard');
           },
         },
       ]
