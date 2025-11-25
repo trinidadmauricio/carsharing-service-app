@@ -118,17 +118,23 @@ export default function VehicleInfoScreen(): React.JSX.Element {
     }
 
     // Navigate to photos screen with vehicle info
-    // TODO: Implement photos screen
-    Alert.alert(
-      'Success',
-      `Vehicle information saved!\n\n${year} ${make} ${model}\nVIN: ${vin}\n\nNext: Add photos`,
-      [
-        {
-          text: 'OK',
-          onPress: () => router.back(),
-        },
-      ]
-    );
+    router.push({
+      pathname: '/(host)/vehicle/photos' as any,
+      params: {
+        year,
+        make,
+        model,
+        trim,
+        vin,
+        licensePlate,
+        color,
+        odometer,
+        transmission,
+        fuelType,
+        seats,
+        doors,
+      },
+    });
   };
 
   return (
