@@ -187,17 +187,14 @@ export default function VehiclePhotosScreen(): React.JSX.Element {
     }
 
     // TODO: Upload photos to server
-    // For now, navigate to location picker
-    Alert.alert(
-      'Success',
-      `${photos.length} photos added!\n\nNext: Set vehicle location`,
-      [
-        {
-          text: 'OK',
-          onPress: () => router.back(),
-        },
-      ]
-    );
+    // Navigate to location picker
+    router.push({
+      pathname: '/(host)/vehicle/location' as any,
+      params: {
+        ...params,
+        photoCount: photos.length.toString(),
+      },
+    });
   };
 
   const photoCount = photos.length;
