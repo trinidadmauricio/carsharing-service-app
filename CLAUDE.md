@@ -232,6 +232,190 @@ catch (error) {
 - Minimum contrast ratio: WCAG AA (4.5:1)
 - Touch targets: 44x44pt minimum
 
+## Project-Specific Rules & Conventions
+
+### React 19 JSX Types
+This project uses **React 19** which has updated JSX type syntax:
+
+```typescript
+// ✅ CORRECT - React 19 syntax
+import React from 'react';
+export default function MyComponent(): React.JSX.Element {
+  return <View />;
+}
+
+// ❌ WRONG - Old syntax (causes "Cannot find namespace 'JSX'" error)
+export default function MyComponent(): JSX.Element {
+  return <View />;
+}
+```
+
+**Always**:
+- Import React when using JSX types: `import React from 'react';`
+- Use `React.JSX.Element` instead of `JSX.Element`
+- This applies to all component return types and JSX arrays
+
+### Safe Area Handling
+Always respect device safe areas (notch, home indicator) using hooks:
+
+```typescript
+// ✅ CORRECT - Use hook for dynamic padding
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function MyScreen() {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View style={[styles.bottomCTA, {
+      paddingBottom: insets.bottom + spacing['3']
+    }]}>
+      {/* Bottom content */}
+    </View>
+  );
+}
+
+// ❌ WRONG - SafeAreaView doesn't work well with absolute positioning
+<SafeAreaView style={styles.bottomCTA}>
+  {/* Content */}
+</SafeAreaView>
+```
+
+**Critical areas requiring safe area handling**:
+- Bottom navigation bars
+- Fixed bottom CTAs (booking buttons, submit forms)
+- Top headers with transparent backgrounds
+- Modals and sheets
+
+### Platform-Specific Code
+Handle iOS vs Android differences explicitly:
+
+```typescript
+// ✅ CORRECT - Platform.select for different behaviors
+import { Platform } from 'react-native';
+
+const styles = StyleSheet.create({
+  input: {
+    height: 48,
+    paddingHorizontal: spacing['4'],
+    paddingVertical: 0,
+    ...Platform.select({
+      android: {
+        textAlignVertical: 'center',
+        includeFontPadding: false,
+      },
+      ios: {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+    }),
+  },
+});
+```
+
+**Common platform differences**:
+- **Text centering**: `textAlignVertical` only works on Android
+- **Font rendering**: iOS includes extra padding by default
+- **Input behavior**: iOS and Android handle TextInput differently
+- **Safe areas**: Different inset values per platform
+
+### Color Palette Usage
+Use semantic color names from the design system:
+
+```typescript
+// ✅ CORRECT - Semantic color names
+palette.primary[500]    // Brand purple/indigo
+palette.info[500]       // Blue color
+palette.success[500]    // Green
+palette.warning[500]    // Yellow
+palette.error[500]      // Red
+palette.neutral[500]    // Gray scale
+
+// ❌ WRONG - Non-existent direct color names
+palette.blue[500]       // Does NOT exist - use palette.info
+palette.green[500]      // Does NOT exist - use palette.success
+palette.red[500]        // Does NOT exist - use palette.error
+```
+
+**Available semantic colors**:
+- `primary` - Brand colors (purple/indigo)
+- `secondary` - Secondary brand (teal)
+- `neutral` - Gray scale
+- `info` - Blue (informational)
+- `success` - Green (positive actions)
+- `warning` - Yellow (cautions)
+- `error` - Red (errors, destructive actions)
+
+### Promise Handling
+Always handle promise rejections, even for non-blocking operations:
+
+```typescript
+// ✅ CORRECT - Catch errors even for fire-and-forget promises
+svc.vehicles.trackView(vehicleId).catch((err) => {
+  console.warn('Failed to track vehicle view:', err);
+});
+
+// Also wrap in try-catch for queryFn
+queryFn: async () => {
+  try {
+    svc.vehicles.trackView(vehicleId).catch(() => {});
+    return await svc.vehicles.getById(vehicleId);
+  } catch (error) {
+    console.error('Error fetching vehicle:', error);
+    throw error;
+  }
+}
+
+// ❌ WRONG - Unhandled promise rejection causes runtime errors
+svc.vehicles.trackView(vehicleId); // Will crash app if it fails
+```
+
+### Build & Type Checking
+Before committing, ALWAYS verify your changes:
+
+```bash
+# Check TypeScript errors
+npm run build              # Runs: tsc --noEmit
+# Must show: 0 errors
+
+# Check ESLint errors
+npm run lint
+# Must show: 0 errors (warnings are acceptable)
+```
+
+**Critical**: Never commit code with TypeScript or ESLint errors. Warnings are acceptable, but errors block the build.
+
+### Input Component Best Practices
+When working with text inputs:
+
+```typescript
+// ✅ CORRECT - Fixed height with platform-specific centering
+const styles = StyleSheet.create({
+  inputContainer: {
+    height: 48,              // Fixed height, not minHeight
+    justifyContent: 'center', // Helps with vertical alignment
+  },
+  input: {
+    paddingVertical: 0,
+    ...Platform.select({
+      android: {
+        textAlignVertical: 'center',
+        includeFontPadding: false,
+      },
+      ios: {
+        // iOS centers automatically with fixed height
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+    }),
+  },
+});
+
+// ❌ WRONG - minHeight causes inconsistent sizing
+inputContainer: {
+  minHeight: 48,  // Don't use minHeight
+}
+```
+
 ## Environment Configuration
 
 Variables are managed through `app.config.ts` and `.env`:
