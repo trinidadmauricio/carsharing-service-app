@@ -10,7 +10,8 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import BottomSheet, {
+import {
+  BottomSheetModal,
   BottomSheetBackdrop,
   BottomSheetScrollView,
   BottomSheetView,
@@ -86,15 +87,15 @@ const SORT_OPTIONS_LIST: { value: SearchSortBy; label: string; icon: string }[] 
 export const FiltersSheet = forwardRef<FiltersSheetRef, FiltersSheetProps>(
   ({ criteria, onCriteriaChange, onApply, onReset, resultsCount }, ref) => {
     const colors = useThemeColors();
-    const bottomSheetRef = useRef<BottomSheet>(null);
+    const bottomSheetRef = useRef<BottomSheetModal>(null);
 
     // Snap points
     const snapPoints = useMemo(() => ['75%', '95%'], []);
 
     // Expose methods
     useImperativeHandle(ref, () => ({
-      open: () => bottomSheetRef.current?.expand(),
-      close: () => bottomSheetRef.current?.close(),
+      open: () => bottomSheetRef.current?.present(),
+      close: () => bottomSheetRef.current?.dismiss(),
     }));
 
     // Backdrop
@@ -170,7 +171,7 @@ export const FiltersSheet = forwardRef<FiltersSheetRef, FiltersSheetProps>(
 
     const handleApply = useCallback(() => {
       onApply();
-      bottomSheetRef.current?.close();
+      bottomSheetRef.current?.dismiss();
     }, [onApply]);
 
     // Count active filters
@@ -187,9 +188,8 @@ export const FiltersSheet = forwardRef<FiltersSheetRef, FiltersSheetProps>(
     }, [criteria]);
 
     return (
-      <BottomSheet
+      <BottomSheetModal
         ref={bottomSheetRef}
-        index={-1}
         snapPoints={snapPoints}
         enablePanDownToClose
         backdropComponent={renderBackdrop}
@@ -368,7 +368,7 @@ export const FiltersSheet = forwardRef<FiltersSheetRef, FiltersSheetProps>(
               : 'Apply filters'}
           </Button>
         </View>
-      </BottomSheet>
+      </BottomSheetModal>
     );
   }
 );

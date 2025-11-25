@@ -69,6 +69,19 @@ export default function BrowseScreen(): React.ReactElement {
     },
   });
 
+  // Debug logging
+  React.useEffect(() => {
+    console.log('[Browse] Search state:', {
+      vehiclesCount: vehicles.length,
+      totalCount,
+      isLoading,
+      isError,
+      error: error?.message,
+      coordinates,
+      locationLoading,
+    });
+  }, [vehicles.length, totalCount, isLoading, isError, error, coordinates, locationLoading]);
+
   // Update search location when user location is available
   React.useEffect(() => {
     if (coordinates && !locationLoading) {
