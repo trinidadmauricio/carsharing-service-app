@@ -10,30 +10,227 @@ This is a React Native/Expo carsharing application for El Salvador, built with T
 
 ## Core Technologies
 
-- **React Native**: 0.73.0 with Expo ~50.0.0
+- **React**: 19.1.0 (latest with updated JSX namespace)
+- **React Native**: 0.81.5 with Expo ~54.0.25
 - **TypeScript**: 5.1.3 (strict mode enabled)
-- **Routing**: Expo Router ~3.4.0 (file-based routing)
-- **State Management**: TanStack React Query ^5.0.0 for remote state
+- **Routing**: Expo Router ~6.0.15 (file-based routing)
+- **State Management**: TanStack React Query ^5.90.10 for remote state
 - **Storage**: expo-secure-store for tokens, expo-local-authentication for biometrics
-- **Animations**: react-native-reanimated for performance-optimized animations
+- **Animations**: react-native-reanimated ~4.1.1 for performance-optimized animations
 
 ## Essential Commands
 
 ### Development
 ```bash
+npx expo start              # Start development server
+npx expo start --ios        # Start iOS simulator
+npx expo start --android    # Start Android emulator
+npm run build               # Type check (tsc --noEmit)
+npm run lint                # Run ESLint
+npm run lint:fix            # Fix ESLint issues
+npm test                    # Run tests
+npm test:watch              # Run tests in watch mode
+npm test:coverage           # Run tests with coverage
+```
+
+### Prototyping
+```bash
 npm run capture              # Capture screenshots of prototypes using Playwright
 npm run capture:puppeteer    # Capture screenshots using Puppeteer (alternative)
 ```
 
-Note: The main app code is not yet implemented. These commands are for the HTML/CSS/JS prototypes in the `prototype/` directory.
+Note: Prototyping commands are for the HTML/CSS/JS prototypes in the `prototype/` directory.
 
-### When Implementing the App (Future)
+## Project-Specific Rules & Conventions
+
+### 1. React 19 JSX Types ⚛️
+
+This project uses **React 19** which has updated JSX type syntax:
+
+```typescript
+// ✅ CORRECT - React 19 syntax
+import React from 'react';
+
+export default function MyComponent(): React.JSX.Element {
+  return <View />;
+}
+
+// ❌ WRONG - Old syntax (causes "Cannot find namespace 'JSX'" error)
+export default function MyComponent(): JSX.Element {
+  return <View />;
+}
+```
+
+**Always**:
+- Import React when using JSX types: `import React from 'react';`
+- Use `React.JSX.Element` instead of `JSX.Element`
+- This applies to all component return types and JSX arrays
+
+### 2. Safe Area Handling 📱
+
+Always respect device safe areas (notch, home indicator) using hooks:
+
+```typescript
+// ✅ CORRECT - Use hook for dynamic padding
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function MyScreen() {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View style={[styles.bottomCTA, {
+      paddingBottom: insets.bottom + spacing['3']
+    }]}>
+      {/* Bottom content */}
+    </View>
+  );
+}
+
+// ❌ WRONG - SafeAreaView doesn't work well with absolute positioning
+<SafeAreaView style={styles.bottomCTA}>
+  {/* Content */}
+</SafeAreaView>
+```
+
+**Critical areas requiring safe area handling**:
+- Bottom navigation bars
+- Fixed bottom CTAs (booking buttons, submit forms)
+- Top headers with transparent backgrounds
+- Modals and sheets
+
+### 3. Platform-Specific Code 🔀
+
+Handle iOS vs Android differences explicitly:
+
+```typescript
+// ✅ CORRECT - Platform.select for different behaviors
+import { Platform } from 'react-native';
+
+const styles = StyleSheet.create({
+  input: {
+    height: 48,
+    paddingHorizontal: spacing['4'],
+    paddingVertical: 0,
+    ...Platform.select({
+      android: {
+        textAlignVertical: 'center',
+        includeFontPadding: false,
+      },
+      ios: {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+    }),
+  },
+});
+```
+
+**Common platform differences**:
+- **Text centering**: `textAlignVertical` only works on Android
+- **Font rendering**: iOS includes extra padding by default
+- **Input behavior**: iOS and Android handle TextInput differently
+- **Safe areas**: Different inset values per platform
+
+### 4. Color Palette Usage 🎨
+
+Use semantic color names from the design system:
+
+```typescript
+// ✅ CORRECT - Semantic color names
+palette.primary[500]    // Brand purple/indigo
+palette.info[500]       // Blue color
+palette.success[500]    // Green
+palette.warning[500]    // Yellow
+palette.error[500]      // Red
+palette.neutral[500]    // Gray scale
+
+// ❌ WRONG - Non-existent direct color names
+palette.blue[500]       // Does NOT exist - use palette.info
+palette.green[500]      // Does NOT exist - use palette.success
+palette.red[500]        // Does NOT exist - use palette.error
+```
+
+**Available semantic colors**:
+- `primary` - Brand colors (purple/indigo)
+- `secondary` - Secondary brand (teal)
+- `neutral` - Gray scale
+- `info` - Blue (informational)
+- `success` - Green (positive actions)
+- `warning` - Yellow (cautions)
+- `error` - Red (errors, destructive actions)
+
+### 5. Promise Handling 🔄
+
+Always handle promise rejections, even for non-blocking operations:
+
+```typescript
+// ✅ CORRECT - Catch errors even for fire-and-forget promises
+svc.vehicles.trackView(vehicleId).catch((err) => {
+  console.warn('Failed to track vehicle view:', err);
+});
+
+// Also wrap in try-catch for queryFn
+queryFn: async () => {
+  try {
+    svc.vehicles.trackView(vehicleId).catch(() => {});
+    return await svc.vehicles.getById(vehicleId);
+  } catch (error) {
+    console.error('Error fetching vehicle:', error);
+    throw error;
+  }
+}
+
+// ❌ WRONG - Unhandled promise rejection causes runtime errors
+svc.vehicles.trackView(vehicleId); // Will crash app if it fails
+```
+
+### 6. Build & Type Checking ✅
+
+Before committing, ALWAYS verify your changes:
+
 ```bash
-npx expo start              # Start development server
-npx expo start --ios        # Start iOS simulator
-npx expo start --android    # Start Android emulator
-npm test                    # Run tests
-npm run lint                # Run ESLint
+# Check TypeScript errors
+npm run build              # Runs: tsc --noEmit
+# Must show: 0 errors
+
+# Check ESLint errors
+npm run lint
+# Must show: 0 errors (warnings are acceptable)
+```
+
+**Critical**: Never commit code with TypeScript or ESLint errors. Warnings are acceptable, but errors block the build.
+
+### 7. Input Component Best Practices ⌨️
+
+When working with text inputs:
+
+```typescript
+// ✅ CORRECT - Fixed height with platform-specific centering
+const styles = StyleSheet.create({
+  inputContainer: {
+    height: 48,              // Fixed height, not minHeight
+    justifyContent: 'center', // Helps with vertical alignment
+  },
+  input: {
+    paddingVertical: 0,
+    ...Platform.select({
+      android: {
+        textAlignVertical: 'center',
+        includeFontPadding: false,
+      },
+      ios: {
+        // iOS centers automatically with fixed height
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
+    }),
+  },
+});
+
+// ❌ WRONG - minHeight causes inconsistent sizing
+inputContainer: {
+  minHeight: 48,  // Don't use minHeight
+}
 ```
 
 ## Architecture Overview
@@ -232,190 +429,6 @@ catch (error) {
 - Minimum contrast ratio: WCAG AA (4.5:1)
 - Touch targets: 44x44pt minimum
 
-## Project-Specific Rules & Conventions
-
-### React 19 JSX Types
-This project uses **React 19** which has updated JSX type syntax:
-
-```typescript
-// ✅ CORRECT - React 19 syntax
-import React from 'react';
-export default function MyComponent(): React.JSX.Element {
-  return <View />;
-}
-
-// ❌ WRONG - Old syntax (causes "Cannot find namespace 'JSX'" error)
-export default function MyComponent(): JSX.Element {
-  return <View />;
-}
-```
-
-**Always**:
-- Import React when using JSX types: `import React from 'react';`
-- Use `React.JSX.Element` instead of `JSX.Element`
-- This applies to all component return types and JSX arrays
-
-### Safe Area Handling
-Always respect device safe areas (notch, home indicator) using hooks:
-
-```typescript
-// ✅ CORRECT - Use hook for dynamic padding
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-function MyScreen() {
-  const insets = useSafeAreaInsets();
-
-  return (
-    <View style={[styles.bottomCTA, {
-      paddingBottom: insets.bottom + spacing['3']
-    }]}>
-      {/* Bottom content */}
-    </View>
-  );
-}
-
-// ❌ WRONG - SafeAreaView doesn't work well with absolute positioning
-<SafeAreaView style={styles.bottomCTA}>
-  {/* Content */}
-</SafeAreaView>
-```
-
-**Critical areas requiring safe area handling**:
-- Bottom navigation bars
-- Fixed bottom CTAs (booking buttons, submit forms)
-- Top headers with transparent backgrounds
-- Modals and sheets
-
-### Platform-Specific Code
-Handle iOS vs Android differences explicitly:
-
-```typescript
-// ✅ CORRECT - Platform.select for different behaviors
-import { Platform } from 'react-native';
-
-const styles = StyleSheet.create({
-  input: {
-    height: 48,
-    paddingHorizontal: spacing['4'],
-    paddingVertical: 0,
-    ...Platform.select({
-      android: {
-        textAlignVertical: 'center',
-        includeFontPadding: false,
-      },
-      ios: {
-        paddingTop: 0,
-        paddingBottom: 0,
-      },
-    }),
-  },
-});
-```
-
-**Common platform differences**:
-- **Text centering**: `textAlignVertical` only works on Android
-- **Font rendering**: iOS includes extra padding by default
-- **Input behavior**: iOS and Android handle TextInput differently
-- **Safe areas**: Different inset values per platform
-
-### Color Palette Usage
-Use semantic color names from the design system:
-
-```typescript
-// ✅ CORRECT - Semantic color names
-palette.primary[500]    // Brand purple/indigo
-palette.info[500]       // Blue color
-palette.success[500]    // Green
-palette.warning[500]    // Yellow
-palette.error[500]      // Red
-palette.neutral[500]    // Gray scale
-
-// ❌ WRONG - Non-existent direct color names
-palette.blue[500]       // Does NOT exist - use palette.info
-palette.green[500]      // Does NOT exist - use palette.success
-palette.red[500]        // Does NOT exist - use palette.error
-```
-
-**Available semantic colors**:
-- `primary` - Brand colors (purple/indigo)
-- `secondary` - Secondary brand (teal)
-- `neutral` - Gray scale
-- `info` - Blue (informational)
-- `success` - Green (positive actions)
-- `warning` - Yellow (cautions)
-- `error` - Red (errors, destructive actions)
-
-### Promise Handling
-Always handle promise rejections, even for non-blocking operations:
-
-```typescript
-// ✅ CORRECT - Catch errors even for fire-and-forget promises
-svc.vehicles.trackView(vehicleId).catch((err) => {
-  console.warn('Failed to track vehicle view:', err);
-});
-
-// Also wrap in try-catch for queryFn
-queryFn: async () => {
-  try {
-    svc.vehicles.trackView(vehicleId).catch(() => {});
-    return await svc.vehicles.getById(vehicleId);
-  } catch (error) {
-    console.error('Error fetching vehicle:', error);
-    throw error;
-  }
-}
-
-// ❌ WRONG - Unhandled promise rejection causes runtime errors
-svc.vehicles.trackView(vehicleId); // Will crash app if it fails
-```
-
-### Build & Type Checking
-Before committing, ALWAYS verify your changes:
-
-```bash
-# Check TypeScript errors
-npm run build              # Runs: tsc --noEmit
-# Must show: 0 errors
-
-# Check ESLint errors
-npm run lint
-# Must show: 0 errors (warnings are acceptable)
-```
-
-**Critical**: Never commit code with TypeScript or ESLint errors. Warnings are acceptable, but errors block the build.
-
-### Input Component Best Practices
-When working with text inputs:
-
-```typescript
-// ✅ CORRECT - Fixed height with platform-specific centering
-const styles = StyleSheet.create({
-  inputContainer: {
-    height: 48,              // Fixed height, not minHeight
-    justifyContent: 'center', // Helps with vertical alignment
-  },
-  input: {
-    paddingVertical: 0,
-    ...Platform.select({
-      android: {
-        textAlignVertical: 'center',
-        includeFontPadding: false,
-      },
-      ios: {
-        // iOS centers automatically with fixed height
-        paddingTop: 0,
-        paddingBottom: 0,
-      },
-    }),
-  },
-});
-
-// ❌ WRONG - minHeight causes inconsistent sizing
-inputContainer: {
-  minHeight: 48,  // Don't use minHeight
-}
-```
-
 ## Environment Configuration
 
 Variables are managed through `app.config.ts` and `.env`:
@@ -468,6 +481,8 @@ When implementing new features, **always review the relevant UX documentation fi
 Before considering any code complete:
 - [ ] Tests written and passing (TDD)
 - [ ] TypeScript types defined (no `any`)
+- [ ] TypeScript errors: 0 (run `npm run build`)
+- [ ] ESLint errors: 0 (run `npm run lint`)
 - [ ] Error handling implemented
 - [ ] Accessibility labels added
 - [ ] Security considerations addressed
@@ -484,12 +499,14 @@ Before considering any code complete:
 5. **Never compromise security** - this app handles sensitive financial and personal data
 6. **Maintain the mock/rest duality** - both implementations must always work
 7. **The project is in Spanish** - many docs and rules are in Spanish, but code should use English
+8. **Always verify builds** - Run `npm run build` and `npm run lint` before committing
 
 ## Quick Reference Links
 
-- React Native Docs: https://reactnative.dev/docs/
-- Expo Docs: https://docs.expo.dev/
-- Expo Router: https://docs.expo.dev/router/introduction/
-- TanStack Query: https://tanstack.com/query/latest
-- TypeScript: https://www.typescriptlang.org/docs/
-- OWASP Mobile Security: https://owasp.org/www-project-mobile-security/
+- **React Native**: https://reactnative.dev/docs/
+- **Expo**: https://docs.expo.dev/
+- **Expo Router**: https://docs.expo.dev/router/introduction/
+- **TanStack Query**: https://tanstack.com/query/latest
+- **TypeScript**: https://www.typescriptlang.org/docs/
+- **React 19**: https://react.dev/blog/2024/12/05/react-19
+- **OWASP Mobile Security**: https://owasp.org/www-project-mobile-security/
