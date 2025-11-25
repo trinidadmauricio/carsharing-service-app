@@ -1,23 +1,23 @@
 # Sprint 4: Tasks
 
 **Sprint**: Host Onboarding + Smart Pricing
-**Estado**: ⬜ Not Started
+**Estado**: 🔄 In Progress (33% - Día 19-20 completado)
 
 ---
 
 ## Día 19-20: Host Registration + Protection
 
 ### `frontend-developer`
-- [ ] Crear `app/(host)/onboarding/index.tsx` - Benefits
-- [ ] Crear `app/(host)/onboarding/requirements.tsx`
-- [ ] Crear `app/(host)/onboarding/documents.tsx`
-- [ ] Crear `app/(host)/onboarding/protection.tsx`
-- [ ] Implementar earnings calculator component
+- [x] Crear `app/(host)/onboarding/index.tsx` - Benefits
+- [x] Crear `app/(host)/onboarding/requirements.tsx`
+- [x] Crear `app/(host)/onboarding/documents.tsx`
+- [x] Crear `app/(host)/onboarding/protection.tsx`
+- [x] Implementar earnings calculator component
 
 ### `typescript-pro`
-- [ ] Crear host protection plan selector
-- [ ] Implementar earnings projection calculation
-- [ ] Definir host onboarding types
+- [x] Crear host protection plan selector
+- [x] Implementar earnings projection calculation
+- [x] Definir host onboarding types
 
 ---
 
